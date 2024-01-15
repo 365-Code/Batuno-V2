@@ -18,7 +18,7 @@ const DetailsSection = () => {
           <div className="w-[108px] h-[108px] mx-auto rounded-full overflow-hidden text-center">
           <img src="https://img.freepik.com/free-photo/young-woman-with-round-glasses-yellow-sweater_273609-7091.jpg?size=626&ext=jpg&ga=GA1.1.2058463804.1704785941&semt=ais" alt="" className="res-img" />
           </div>
-          <h3 className='text-lg font-semibold'>Kierra McAdams</h3>
+          <h3 className='text-lg'>Kierra McAdams</h3>
           <p className='text-sm font-semibold text-green-400'>Co-founder @ Coffee Country</p>
         </div>
         <div className='flex items-center justify-center gap-2'>

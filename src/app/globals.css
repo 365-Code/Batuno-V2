@@ -12,7 +12,7 @@
 }
 
 body{
-  @apply h-screen w-screen overflow-hidden scroll-smooth;
+  @apply h-screen w-screen overflow-hidden scroll-smooth text-slate-600;
 }
 
 img{
