@@ -1,27 +1,59 @@
+@import "~@flaticon/flaticon-uicons/css/all/all";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+body{
+  @apply h-screen w-screen overflow-hidden scroll-smooth;
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+img{
+  @apply w-full h-full object-center object-cover;
+}
+
+section{
+  @apply p-2 relative;
+}
+
+#navSection{
+  @apply bg-[#202022];
+}
+
+.fi{
+  @apply flex text-lg;
+}
+
+.icon-hover{
+  @apply hover:bg-[#464646] text-[#f8f8f8];
+}
+
+.nav-icon{
+  @apply text-[#898989] hover:text-[#f8f8f8] hover:bg-[#464646] flex flex-col justify-center items-center gap-1 max-w-full w-[80px] h-[80px] rounded-lg ;
+}
+
+.icon-selected{
+  @apply bg-[#464646] text-[#f8f8f8] ;
+}
+
+
+.custom-scrollbar::-webkit-scrollbar{
+  width: 2px;
+  height: 2px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb{
+  background-color: #464646;
+}
+
+.no-scrollbar::-webkit-scrollbar{
+  width: 0;
+  height: 0;
 }
