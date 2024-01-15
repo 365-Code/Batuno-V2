@@ -3,7 +3,7 @@ import React from "react";
 
 const NavSection = () => {
   return (
-    <section id="navSection" className="p-2 py-4 w-[100px] gap-4 flex flex-col justify-between items-center">
+    <section id="navSection" className="p-4 w-[100px] gap-4 flex flex-col justify-between items-center">
 
       <div id="logo">
         <div className="w-[48px] h-[48px] rounded-full overflow-hidden">
@@ -15,10 +15,9 @@ const NavSection = () => {
         </div>
       </div>
       
-      <div id="nav" className="flex flex-col items-center">
+      <div id="nav" className="flex gap-2 flex-col items-center">
 
         <div className="h-[320px] text-center space-y-2 overflow-y-scroll no-scrollbar">
-
           <Link href="/" className="nav-icon icon-selected">
             <i className="fi fi-sr-messages" />
             <span className="text-sm">All chats</span>
@@ -40,8 +39,8 @@ const NavSection = () => {
           </Link>
           
           <Link href="/" className="nav-icon">
-            <i className="fi fi-sr-archive"/>
-            <span className="text-sm">Archive</span>
+            <i className="fi fi-sr-plus"/>
+            <span className="text-sm">Add</span>
           </Link>
         </div>
 

@@ -1,9 +1,11 @@
 import type { Metadata } from 'next'
-import { Inter, Poppins } from 'next/font/google'
+import { Inter, Karla, Poppins, Raleway } from 'next/font/google'
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin'] })
 const poppins = Poppins({ subsets: ['latin'], weight: ["400"] })
+const raleway = Raleway({ subsets: ['latin'], weight: ["500"] })
+const karla = Karla({ subsets: ['latin'], weight: ["500"] })
 
 export const metadata: Metadata = {
   title: 'Batuno',
@@ -17,7 +19,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={poppins.className}>{children}</body>
+      <body className={karla.className}>{children}</body>
     </html>
   )
 }

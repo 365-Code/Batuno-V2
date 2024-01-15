@@ -10,14 +10,12 @@ const Home = () => {
 
 
 <main className="h-screen flex items-center justify-center p-4">
-  <div className="w-full h-full border border-black flex"> 
+  <div className="w-full h-full flex shadow-sm shadow-black/50"> 
   <NavSection/>
   <ChatsSection/>
   <MsgSection/>
   <DetailsSection/>
   </div>
-
-
 </main>
 
   )

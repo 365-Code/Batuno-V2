@@ -19,7 +19,68 @@ export const users = [
 
 export const messages = [
     {
-        users: ['#4fvdgf4','#fe34rf2'],
+        users: ['#073781e8','#870669a1'],
+        chat: [
+            {
+                sender: "#073781e8",
+                text: "How about we get together for coffee this weekend!!"
+            },
+            {
+                sender: "#4fvdgf4",
+                text: "Amazing!"
+            },
+            {
+                sender: "#4fvdgf4",
+                text: "That sounds like an awesome plan to me! 😊"
+
+            },
+            {
+                sender: "#073781e8",
+                text: "Let's see who else wants some fun! 😁"
+
+            },
+            {
+                sender: "#4fvdgf4",
+                text: "Ofcourse, I'm in!?"
+
+            },
+            {
+                sender: "#4fvdgf4",
+                text: 'I have recently discovered an awesome coffee place. Could we PLEASE have it there?'
+
+            },
+            {
+                sender: "#073781e8",
+                text: "How about we get together for coffee this weekend!!"
+            },
+            {
+                sender: "#4fvdgf4",
+                text: "Amazing!"
+            },
+            {
+                sender: "#4fvdgf4",
+                text: "That sounds like an awesome plan to me! 😊"
+
+            },
+            {
+                sender: "#073781e8",
+                text: "Let's see who else wants some fun! 😁"
+
+            },
+            {
+                sender: "#4fvdgf4",
+                text: "Ofcourse, I'm in!?"
+
+            },
+            {
+                sender: "#4fvdgf4",
+                text: 'I have recently discovered an awesome coffee place. Could we PLEASE have it there?'
+
+            },
+        ]
+    },
+    { 
+        users: ['#870669a1','#b74def89'],
         chat: [
             {
                 sender: "#4fvdgf4",
@@ -61,7 +122,7 @@ export const messages = [
             },
         ]
     }
-    
+
 ]
 
 // chat: [

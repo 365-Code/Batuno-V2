@@ -20,7 +20,7 @@ img{
 }
 
 section{
-  @apply p-2 relative;
+  @apply p-4 relative;
 }
 
 #navSection{
@@ -28,7 +28,7 @@ section{
 }
 
 .fi{
-  @apply flex text-lg;
+  @apply flex;
 }
 
 .icon-hover{
