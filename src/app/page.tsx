@@ -5,7 +5,7 @@ import MsgSection from "@/components/MsgSection";
 import NavSection from "@/components/NavSection";
 import WelcomeSection from "@/components/WelcomeSection";
 import { useAuth } from "@/context/AuthState";
-import { chatUser } from "@/utils";
+import { useChatUser } from "@/context/ChatState";
 import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 
@@ -14,6 +14,7 @@ const Home = () => {
   
   const nav = useRouter()
   const {currentUser} = useAuth()
+  const {chatUser} = useChatUser()
 
   useEffect(() => {
     !currentUser.logged && nav.push('/auth/login')
@@ -21,16 +22,16 @@ const Home = () => {
 
 
   return (
-    <main className="h-screen flex items-center justify-center p-4">
-      <div className="w-full h-full flex shadow-sm shadow-black/50">
+    <main className="h-screen flex items-center justify-center md:p-4">
+      <div className="max-w-full w-[900px] h-full flex shadow-sm shadow-black/50">
         <NavSection />
         <ChatsSection />
         {
-          chatUser
+          chatUser.uid
           ? <MsgSection />
           : <WelcomeSection/>
         }
-        <DetailsSection />
+        {/* <DetailsSection /> */}
       </div>
     </main>
   );

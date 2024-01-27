@@ -120,29 +120,35 @@ const MsgSection = () => {
     chatUser.uid && fetchMessages()
   }, [chatUser]);
 
-  useEffect(() => {
-    const unsub = onSnapshot(doc(db, 'chats', msgs.id), (doc)=>{
+  const unsub = async () =>{
+    try {
+    onSnapshot(doc(db, 'chats', msgs.id), (doc)=>{
       if(doc.exists()){
         const messages = doc.data().messages as Array<messageType>
         setMsgs((preVal) => ({...preVal, messages}))
-        console.log("calling");
       }
       })
-    
-    return () => unsub()
+  } catch (error) {
+  return error   
+  }
+}
+
+  useEffect(() => {
+    unsub()
   }, [msgs.id])
 
   return (
     <section className="relative h-full flex-1 flex flex-col justify-between backdrop-blur-sm bg-[#f4f6f3] w-[500px]">
       <img
         className="h-full w-full object-fill object-center absolute top-0 left-0 -z-[1] opacity-25"
-        src="https://img.freepik.com/premium-vector/vector-mosaic-seamless-pattern-with-geometric-shapes-retro-memphis-style-fashion-8090s_547648-1314.jpg?w=740"
+        src='/bg.svg'
         alt=""
       />
       <div
         id="heading"
         className="w-full h-[65px] z-[2] flex items-center gap-4 top-0 left-0 absolute bg-black/20 backdrop-blur-sm px-4"
       >
+        <img className="w-[40px] h-[40px] rounded-full" src={chatUser.avatar} alt="" />
         <h3 className="text-2xl py-4">{msgs.name || "Group Name"}</h3>
 
         {msgs.isGroup && (
@@ -190,9 +196,9 @@ const MsgSection = () => {
 
       <div
         id="send"
-        className="flex gap-6 items-center justify-between max-w-full"
+        className="flex gap-1 md:gap-6 items-center justify-between max-w-full"
       >
-        <div className="w-[40px] h-[40px] rounded-full overflow-hidden">
+        <div className="hidden md:block w-[40px] h-[40px] rounded-full overflow-hidden">
           <img
             src={currentUser.avatar || "https://img.freepik.com/free-photo/view-3d-confident-businessman_23-2150709932.jpg?t=st=1705210759~exp=1705214359~hmac=fd5a10a8cb94fb6f8c6c19553a52d1d2c2ebc4856ca83543da774e896ed6fb67&w=740"}
             alt=""
@@ -217,10 +223,10 @@ const MsgSection = () => {
 
         <button
           onClick={handleMsg}
-          className="flex items-center gap-2 rounded-md px-6 py-4 bg-green-400 hover:bg-green-500 text-white"
+          className="flex items-center gap-2 rounded-md px-4 sm:px-6 py-4 bg-green-400 hover:bg-green-500 text-white"
         >
           <i className="fi fi-sr-paper-plane" />
-          Send
+          <span className="hidden sm:block">Send</span>
         </button>
       </div>
     </section>

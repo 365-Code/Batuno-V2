@@ -10,11 +10,14 @@ const NavSection = () => {
 
   const {currentUser} = useAuth()
 
+  console.log(currentUser);
+  
+
   return (
-    <section className='p-0 shadow-sm shadow-black/20 gap-8 flex flex-col items-center justify-between'>
-        <div id='logo' className='py-4 px-2'>
-          <img src="https://img.freepik.com/free-photo/realistic-o-letter-with-colorful-surface_23-2150458486.jpg?t=st=1705399402~exp=1705403002~hmac=3dd886efc86a9493c1ef16147be54198064b11d82b5641eec478a0d7f62cb021&w=740" alt="" className='h-[48px] w-[48px] rounded-full'/>
-        </div>
+    <section className='min-w-fit p-0 shadow-sm shadow-black/20 gap-8 flex flex-col items-center justify-between'>
+      <div id='logo' className='py-4 px-2'>
+        <img src="https://img.freepik.com/free-photo/realistic-o-letter-with-colorful-surface_23-2150458486.jpg?t=st=1705399402~exp=1705403002~hmac=3dd886efc86a9493c1ef16147be54198064b11d82b5641eec478a0d7f62cb021&w=740" alt="" className='h-[48px] w-[48px] rounded-full'/>
+      </div>
 
       <div id='nav' className='flex-1 flex flex-col gap-2 w-full'>
         <Link href={'/'} className='nav-icon icon-selected'>
@@ -34,8 +37,11 @@ const NavSection = () => {
 
       </div>
 
-      <button onClick={() => signOut(auth)} id='profile' className='px-2 py-4'>
-        <img src={currentUser.avatar || avatars[0]} alt="" className='h-[48px] w-[48px] rounded-full'/>
+      <button onClick={() => signOut(auth)} id='profile' className='px-2 py-4 nav-icon'>
+        {/* <img src={currentUser.avatar || avatars[0]} alt="" className='h-[48px] w-[48px] rounded-full'/> */}
+        <span className='text-sm'>log</span>
+        <i className='text-2xl fi fi-sr-power' />
+        <span className='text-sm'>out</span>
       </button>
 
     </section>
