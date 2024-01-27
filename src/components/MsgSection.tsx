@@ -187,9 +187,9 @@ const MsgSection = () => {
       >
         {msgs.messages.map((msg: any, i) =>
           msg.sender == currentUser.uid ? (
-            <Msg msgTime={msg.msgTime} avatar={msg.avatar} msg={msg.text} fromSelf={true} />
+            <Msg key={i} msgTime={msg.msgTime} avatar={msg.avatar} msg={msg.text} fromSelf={true} />
           ) : (
-            <Msg msgTime={msg.msgTime} avatar={msg.avatar} msg={msg.text} fromSelf={false} />
+            <Msg key={i} msgTime={msg.msgTime} avatar={msg.avatar} msg={msg.text} fromSelf={false} />
           )
         )}
       </div>
