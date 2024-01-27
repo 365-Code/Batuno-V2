@@ -1,74 +1,230 @@
-"use client"
-import React, { useEffect, useState } from 'react'
-import Msg from './Msg'
-import { messages, users } from '@/utils'
+"use client";
+import React, { useEffect, useState } from "react";
+import Msg from "./Msg";
+import { messageType, messagesType } from "@/utils";
+import { useAuth } from "@/context/AuthState";
+import { useChatUser } from "@/context/ChatState";
+import { Timestamp, arrayUnion, doc, getDoc, onSnapshot, setDoc, updateDoc } from "firebase/firestore";
+import { db } from "@/utils/firebase";
 
 const MsgSection = () => {
 
-  const currentUser= users[0];
-  const chatUser = users[1];
-  const [msgs, setMsgs] = useState([] as Array<object>)
+  const { currentUser } = useAuth();
+  const { chatUser } = useChatUser();
+
+  const [msgs, setMsgs] = useState<messagesType>({
+    id: "",
+    name: chatUser.username,
+    isGroup: false,
+    messages: [] as Array<messageType>
+  });
+
+
+  const [msg, setMsg] = useState("");
+
+  // useEffect(() => {
+  //   setMsgs({ name: chatUser.username, isGroup: false, messages: [] });
+  // }, [chatUser]);
+
+  // useEffect(() => {
+
+  //   chats.forEach((cht) => {
+  //     let ind = cht.users.findIndex((u) => u == currentUser.uId)
+  //     ind = ind && cht.users.findIndex((u) => u == chatUser?.uId)
+  //     if(cht.users.length <= 2 && ind){
+  //       setMsgs({
+  //         name: chatUser?.uId,
+  //         messages: [...cht.chat.texts],
+  //         isGroup: false
+  //       })
+  //     }
+  //   })
+
+  // }, [])
+
+  const fetchMessages = async () => {
+    const combineId = currentUser.uid > chatUser.uid ? (currentUser.uid + chatUser.uid) : chatUser.uid + currentUser.uid
+    try{
+      const chatRef = doc(db, 'chats', combineId)
+      const querySnapshot = await getDoc(chatRef);
+      
+      if(querySnapshot.exists()){
+        const messages = querySnapshot.data().messages as Array<messageType>
+        setMsgs({id: combineId, name: chatUser.username, isGroup: false, messages})
+      } else{
+        setMsgs({id: combineId, name: chatUser.username, isGroup: false, messages: []})
+      }
+    } catch (error){
+      console.log(error);
+      return error
+    }
+  }
+
+  const sendMsg = async () => {
+    const combineId = currentUser.uid > chatUser.uid ? (currentUser.uid + chatUser.uid) : (chatUser.uid + currentUser.uid)
+    const chatRef = doc(db, 'chats', combineId)
+    const currentUserRef = doc(db, 'users', currentUser.uid)
+    const chatUserRef = doc(db, 'users', chatUser.uid)
+    try {
+      
+      const result = await getDoc(chatRef)
+      if(!result.exists()){
+        await setDoc(chatRef, {messages: []})
+
+        await updateDoc(currentUserRef, {
+          contacts: arrayUnion({
+            uid: chatUser.uid,
+            username: chatUser.username,
+            avatar: chatUser.avatar
+          })
+        })
+
+        await updateDoc(chatUserRef, {
+          contacts: arrayUnion({
+            uid: currentUser.uid,
+            username: currentUser.username,
+            avatar: currentUser.avatar
+          })
+        })
+
+
+      } else{
+        await updateDoc(chatRef, {
+          messages: arrayUnion({
+            sender: currentUser.uid,
+            avatar: currentUser.avatar,
+            text: msg,
+            msgTime: Timestamp.now()
+          })
+        })
+      }
+        
+    } catch (error) {
+      return error
+    }
+  }
+  
+  const handleChange = (e: any) => {
+    const value = e.target.value;
+    setMsg(value);
+  };
+
+  const handleMsg = () => {
+    const newMsgs = [...msgs.messages, { sender: currentUser.uid, avatar: currentUser.avatar, text: msg, msgTime: Timestamp.now() }];
+    setMsgs((preVal: any) => ({ ...preVal, messages: newMsgs }));
+    sendMsg()
+    setMsg("");
+  };
 
   useEffect(() => {
-    const chats = messages.find((msg) => msg.users.find((u) => (u == currentUser.uId) ))
-    if(chats){
-      setMsgs(chats.chat)
-    }
-  }, [])
+    chatUser.uid && fetchMessages()
+  }, [chatUser]);
+
+  useEffect(() => {
+    const unsub = onSnapshot(doc(db, 'chats', msgs.id), (doc)=>{
+      if(doc.exists()){
+        const messages = doc.data().messages as Array<messageType>
+        setMsgs((preVal) => ({...preVal, messages}))
+        console.log("calling");
+      }
+      })
+    
+    return () => unsub()
+  }, [msgs.id])
 
   return (
     <section className="relative h-full flex-1 flex flex-col justify-between backdrop-blur-sm bg-[#f4f6f3] w-[500px]">
-      <img className='h-full w-full object-fill object-center absolute top-0 left-0 -z-[1] opacity-25' src="https://img.freepik.com/premium-vector/vector-mosaic-seamless-pattern-with-geometric-shapes-retro-memphis-style-fashion-8090s_547648-1314.jpg?w=740" alt="" />
-      <div id="heading" className='w-full h-[65px] z-[2] flex items-center gap-4 top-0 left-0 absolute bg-black/20 backdrop-blur-sm px-4'>
+      <img
+        className="h-full w-full object-fill object-center absolute top-0 left-0 -z-[1] opacity-25"
+        src="https://img.freepik.com/premium-vector/vector-mosaic-seamless-pattern-with-geometric-shapes-retro-memphis-style-fashion-8090s_547648-1314.jpg?w=740"
+        alt=""
+      />
+      <div
+        id="heading"
+        className="w-full h-[65px] z-[2] flex items-center gap-4 top-0 left-0 absolute bg-black/20 backdrop-blur-sm px-4"
+      >
+        <h3 className="text-2xl py-4">{msgs.name || "Group Name"}</h3>
 
-        <h3 className='text-2xl py-4'>Coffee Nerds</h3>
-
-        <div className='relative flex items-center h-[36px] w-[72px] py-4 justify-center'>
-            <div className="absolute z-[2] top-0 left-0 w-[36px] h-[36px] rounded-full overflow-hidden">
-              <img src="https://img.freepik.com/free-photo/view-3d-confident-businessman_23-2150709932.jpg?t=st=1705210759~exp=1705214359~hmac=fd5a10a8cb94fb6f8c6c19553a52d1d2c2ebc4856ca83543da774e896ed6fb67&w=740" alt="" className="res-img" />
+        {msgs.isGroup && (
+          <div className="flex items-center gap-2">
+            <div className="relative flex items-center h-[36px] w-[72px] py-4 justify-center">
+              <div className="absolute z-[2] top-0 left-0 w-[36px] h-[36px] rounded-full overflow-hidden">
+                <img
+                  src="https://img.freepik.com/free-photo/view-3d-confident-businessman_23-2150709932.jpg?t=st=1705210759~exp=1705214359~hmac=fd5a10a8cb94fb6f8c6c19553a52d1d2c2ebc4856ca83543da774e896ed6fb67&w=740"
+                  alt=""
+                  className="res-img"
+                />
+              </div>
+              <div className="absolute z-[1] top-0 left-4 w-[36px] h-[36px] rounded-full overflow-hidden">
+                <img
+                  src="https://img.freepik.com/free-photo/view-3d-confident-businessman_23-2150709932.jpg?t=st=1705210759~exp=1705214359~hmac=fd5a10a8cb94fb6f8c6c19553a52d1d2c2ebc4856ca83543da774e896ed6fb67&w=740"
+                  alt=""
+                  className="res-img"
+                />
+              </div>
+              <div className="absolute top-0 left-8 w-[36px] h-[36px] rounded-full overflow-hidden">
+                <img
+                  src="https://img.freepik.com/free-photo/view-3d-confident-businessman_23-2150709932.jpg?t=st=1705210759~exp=1705214359~hmac=fd5a10a8cb94fb6f8c6c19553a52d1d2c2ebc4856ca83543da774e896ed6fb67&w=740"
+                  alt=""
+                  className="res-img"
+                />
+              </div>
             </div>
-            <div className="absolute z-[1] top-0 left-4 w-[36px] h-[36px] rounded-full overflow-hidden">
-              <img src="https://img.freepik.com/free-photo/view-3d-confident-businessman_23-2150709932.jpg?t=st=1705210759~exp=1705214359~hmac=fd5a10a8cb94fb6f8c6c19553a52d1d2c2ebc4856ca83543da774e896ed6fb67&w=740" alt="" className="res-img" />
-            </div>
-            <div className="absolute top-0 left-8 w-[36px] h-[36px] rounded-full overflow-hidden">
-              <img src="https://img.freepik.com/free-photo/view-3d-confident-businessman_23-2150709932.jpg?t=st=1705210759~exp=1705214359~hmac=fd5a10a8cb94fb6f8c6c19553a52d1d2c2ebc4856ca83543da774e896ed6fb67&w=740" alt="" className="res-img" />
-            </div>
-        </div>
-        <p className='text-green-500 text-xl'>+3</p>
-
-      </div>
-
-      <div id="messages" className='h-[90%] pt-16 overflow-y-scroll no-scrollbar'>
-        {
-          msgs.map((msg: any, i) =>
-            msg.sender == currentUser.uId
-            ? <Msg msg={msg.text} fromSelf={true}/>
-            : <Msg msg={msg.text} fromSelf={false}/>
-          )
-        }
-      </div>
-
-      <div id="send" className='flex gap-6 items-center justify-between max-w-full'>
-        <div className="w-[40px] h-[40px] rounded-full overflow-hidden">
-          <img src="https://img.freepik.com/free-photo/view-3d-confident-businessman_23-2150709932.jpg?t=st=1705210759~exp=1705214359~hmac=fd5a10a8cb94fb6f8c6c19553a52d1d2c2ebc4856ca83543da774e896ed6fb67&w=740" alt="" className="res-img" />
-        </div>
-
-          <div className='bg-white focus-within:ring-green-500 focus-within:ring-1 rounded-md flex-1 flex items-center px-4 gap-4'>
-            <input type="text" className='w-full py-4 outline-none' placeholder='Write a reply'/>
-            <div className='flex gap-4 items-center'>
-              <i className="fi fi-sr-clip hover:text-green-500 cursor-pointer text-xl" />
-              <i className="fi fi-sr-smile-plus hover:text-green-500 cursor-pointer text-xl" />
-            </div>
+            <p className="text-green-500 text-xl">+3</p>
           </div>
-
-          <button className='flex items-center gap-2 rounded-md px-6 py-4 bg-green-400 hover:bg-green-500 text-white'>
-          <i className="fi fi-sr-paper-plane" />
-            Send
-          </button>
+        )}
       </div>
 
-    </section>
-  )
-}
+      <div
+        id="chat-messages"
+        className="h-[90%] pt-16 overflow-y-scroll no-scrollbar"
+      >
+        {msgs.messages.map((msg: any, i) =>
+          msg.sender == currentUser.uid ? (
+            <Msg msgTime={msg.msgTime} avatar={msg.avatar} msg={msg.text} fromSelf={true} />
+          ) : (
+            <Msg msgTime={msg.msgTime} avatar={msg.avatar} msg={msg.text} fromSelf={false} />
+          )
+        )}
+      </div>
 
-export default MsgSection
+      <div
+        id="send"
+        className="flex gap-6 items-center justify-between max-w-full"
+      >
+        <div className="w-[40px] h-[40px] rounded-full overflow-hidden">
+          <img
+            src={currentUser.avatar || "https://img.freepik.com/free-photo/view-3d-confident-businessman_23-2150709932.jpg?t=st=1705210759~exp=1705214359~hmac=fd5a10a8cb94fb6f8c6c19553a52d1d2c2ebc4856ca83543da774e896ed6fb67&w=740"}
+            alt=""
+            className="res-img"
+          />
+        </div>
+
+        <div className="bg-white focus-within:ring-green-500 focus-within:ring-1 rounded-md flex-1 flex items-center px-4 gap-4">
+          <input
+            name="msg"
+            value={msg}
+            onChange={handleChange}
+            type="text"
+            className="w-full py-4 outline-none"
+            placeholder="Write a reply"
+          />
+          <div className="flex gap-4 items-center">
+            <i className="fi fi-sr-clip hover:text-green-500 cursor-pointer text-xl" />
+            <i className="fi fi-sr-smile-plus hover:text-green-500 cursor-pointer text-xl" />
+          </div>
+        </div>
+
+        <button
+          onClick={handleMsg}
+          className="flex items-center gap-2 rounded-md px-6 py-4 bg-green-400 hover:bg-green-500 text-white"
+        >
+          <i className="fi fi-sr-paper-plane" />
+          Send
+        </button>
+      </div>
+    </section>
+  );
+};
+
+export default MsgSection;

@@ -1,18 +1,24 @@
+import { useChatUser } from "@/context/ChatState";
 import React from "react";
 
 const ChatCard = ({
   cName,
   avatar,
-  active,
+  cUid,
 }: {
   cName?: string;
   avatar?: string;
   active?: boolean;
+  cUid: string;
 }) => {
+
+  const {chatUser ,setChatUser} = useChatUser()
+
   return (
     <div
+    onClick={() => setChatUser({username: cName,uid: cUid, avatar})}
       className={`flex px-4 py-2 items-center justify-start gap-4 cursor-pointer ${
-        active ? "bg-green-400 text-white" : " hover:text-green-400"
+        chatUser?.uid == cUid ? "bg-green-400 text-white" : " hover:text-green-400"
       }`}
     >
       <div className="w-[40px] h-[40px] rounded-full overflow-hidden">

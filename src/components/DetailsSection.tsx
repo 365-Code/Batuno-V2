@@ -27,6 +27,7 @@ const DetailsSection = () => {
           <i className="fi fi-sr-video-camera-alt p-4 border rounded-full hover:text-white hover:bg-green-400 cursor-pointer" />
         </div>
       </div>
+      <hr className='invisible'/>
       
       <div id="otherfiles" className='max-h-[200px] overflow-y-scroll no-scrollbar'>
         <h3 className='text-slate-500'>Shared files</h3>

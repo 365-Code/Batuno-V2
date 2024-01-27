@@ -1,6 +1,10 @@
 import type { Metadata } from 'next'
 import { Inter, Karla, Poppins, Raleway } from 'next/font/google'
 import './globals.css'
+import { Bounce, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { AuthState } from '@/context/AuthState';
+import { ChatUserState } from '@/context/ChatState';
 
 const inter = Inter({ subsets: ['latin'] })
 const poppins = Poppins({ subsets: ['latin'], weight: ["400"] })
@@ -19,7 +23,26 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={karla.className}>{children}</body>
+      <body className={karla.className}>
+        <AuthState>
+          <ChatUserState>
+          {children}
+          </ChatUserState>
+        </AuthState>
+        <ToastContainer
+        position="top-center"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+        transition={Bounce}
+        />
+      </body>
     </html>
   )
 }
