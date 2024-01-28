@@ -5,6 +5,7 @@ import { FirebaseError } from "firebase/app";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { addDoc, collection, doc, setDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
@@ -99,7 +100,7 @@ const Page = () => {
             htmlFor="avatar"
             className=" cursor-pointer w-[64px] h-[64px] overflow-hidden rounded-full"
           >
-            <img src={avatar || avatars[3]} alt="avatar" className="res-img" />
+            <Image height={100} width={100} src={avatar || avatars[3]} alt="avatar" className="res-img" />
           </label>
           <input
             name="avatar"

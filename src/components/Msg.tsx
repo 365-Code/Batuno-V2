@@ -1,7 +1,8 @@
 "use client"
+import Image from 'next/image'
 import React, { useEffect, useRef } from 'react'
 
-const Msg = ({msg, fromSelf, avatar, msgTime}: {msg: string, fromSelf: boolean, avatar?: string, msgTime?: any}) => {
+const Msg = ({msg, fromSelf, avatar, msgTime}: {msg: string, fromSelf: boolean, avatar: string, msgTime?: any}) => {
   
   const scrollRef = useRef<HTMLInputElement>(null)
 
@@ -49,7 +50,7 @@ const Msg = ({msg, fromSelf, avatar, msgTime}: {msg: string, fromSelf: boolean, 
           {today.day != msgDate.day && <p>{msgDate.day +  " " + ((today.year != msgDate.year) ? msgDate.year : "") }</p>}
           {today.time == msgDate.time ? "just now" : <p>{msgDate.time}</p>}
           </p>
-          <img className='w-[40px] h-[40px] rounded-full' src={avatar} alt="" />
+          <Image height={100} width={100} className='w-[40px] h-[40px] rounded-full' src={avatar} alt="avatar" />
         </p>
     </div>
   )

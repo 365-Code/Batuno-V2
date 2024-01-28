@@ -1,6 +1,7 @@
 import React from 'react'
 import FileCard from './FileCard'
 import ToggleButton from './ToggleButton'
+import Image from 'next/image'
 
 const DetailsSection = () => {
 
@@ -16,7 +17,9 @@ const DetailsSection = () => {
       <div id="otherprofile" className='space-y-4 text-center'>
         <div>
           <div className="w-[108px] h-[108px] mx-auto rounded-full overflow-hidden text-center">
-          <img src="https://img.freepik.com/free-photo/young-woman-with-round-glasses-yellow-sweater_273609-7091.jpg?size=626&ext=jpg&ga=GA1.1.2058463804.1704785941&semt=ais" alt="" className="res-img" />
+          <Image
+        height={100}
+        width={100} src="https://img.freepik.com/free-photo/young-woman-with-round-glasses-yellow-sweater_273609-7091.jpg?size=626&ext=jpg&ga=GA1.1.2058463804.1704785941&semt=ais" alt="" className="res-img" />
           </div>
           <h3 className='text-lg'>Kierra McAdams</h3>
           <p className='text-sm font-semibold text-green-400'>Co-founder @ Coffee Country</p>

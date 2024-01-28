@@ -6,6 +6,7 @@ import { avatars } from "@/utils";
 import { db, storage } from "@/utils/firebase";
 import { doc, updateDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import Image from "next/image";
 import React, { ChangeEvent, useEffect, useState } from "react";
 
 const Page = () => {
@@ -136,9 +137,11 @@ const Page = () => {
 
             <div className="relative w-fit space-y-2 text-center">
                 <label htmlFor={edit ? "uploadAvatar" : "" }>
-                <img
+                <Image
+                    height={200}
+                    width={200}
                     src={user.avatar || avatars[4]}
-                    alt=""
+                    alt="useravatar"
                     className=" mx-auto w-[200px] h-[200px]"
                     />
                 </label>
