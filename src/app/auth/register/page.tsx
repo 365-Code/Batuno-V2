@@ -49,6 +49,7 @@ const Page = () => {
         avatar: avatar,
         favourites: [],
       })
+
       console.log(userRef);
       nav.push('/auth/login')
     } catch (error: any) {
@@ -60,7 +61,6 @@ const Page = () => {
   const uploadFile = async (img: any) => {
     if (!img) return;
     const avatarRef = ref(storage, `avatars/${img?.name}`);
-
     const uploadTask = uploadBytesResumable(avatarRef, img);
     uploadTask.on("state_changed", (snapshot: any) => {
     },

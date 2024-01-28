@@ -3,7 +3,8 @@ import ErrorText from "@/components/ErrorText";
 import NavSection from "@/components/NavSection";
 import { useAuth } from "@/context/AuthState";
 import { avatars } from "@/utils";
-import { db, storage } from "@/utils/firebase";
+import { auth, db, storage } from "@/utils/firebase";
+import { updateProfile } from "firebase/auth";
 import { doc, updateDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import Image from "next/image";
@@ -12,23 +13,23 @@ import React, { ChangeEvent, useEffect, useState } from "react";
 const Page = () => {
   const { currentUser } = useAuth();
   const [user, setUser] = useState({
-    username: '',
-    avatar: '',
-    phone: ''
+    username: "",
+    avatar: "",
+    phone: 0,
   });
   const [userError, setUserError] = useState({
     username: false,
     phone: false,
-  })
+  });
   const [avatar, setAvatar] = useState<any>();
   const [edit, setEdit] = useState(false);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    if(name == "phone" && value.toString().length > 10){
-        return
+    if (name == "phone" && value.toString().length > 10) {
+      return;
     }
-    setUserError((preVal) => ({...preVal, [name]: false}))
+    setUserError((preVal) => ({ ...preVal, [name]: false }));
     setUser((preVal) => ({ ...preVal, [name]: value }));
   };
 
@@ -36,60 +37,67 @@ const Page = () => {
     if (!img) return;
     const avatarRef = ref(storage, `avatars/${img?.name}`);
     const uploadTask = uploadBytesResumable(avatarRef, img);
-    uploadTask.on("state_changed",
-        (error: any) => {
-            console.log(error);
-        },
-        () => {
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            setUser({...user, avatar: downloadURL})
-          });
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {},
+      (error: any) => {
+        console.log(error);
+      },
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          setUser({ ...user, avatar: downloadURL });
         });
+      }
+    );
   };
 
   const handleAvatar = (e: ChangeEvent<HTMLInputElement>) => {
-    if(e.target.files?.length){
-        setUser({...user, avatar: URL.createObjectURL(e.target.files[0])})
-        setAvatar(e.target.files[0])
+    if (e.target.files?.length) {
+      setUser({ ...user, avatar: URL.createObjectURL(e.target.files[0]) });
+      setAvatar(e.target.files[0]);
     }
   };
 
-  useEffect(()=>{
-    setUser({
-        username: currentUser.username,
-        avatar: currentUser.avatar,
-        phone: ''
-    })
-  }, [currentUser])
+  useEffect(() => {
+    setUser((preVal) => ({ ...preVal, ...currentUser }));
+  }, [currentUser]);
 
   const handleValidate = () => {
-
-    if(user.username.length < 3){
-        setUserError({username: true, phone: false})
-    } else if(user.phone.toString().length != 10){
-        setUserError({username: false, phone: true})
-    } else{
-        return true
+    if (user.username.length < 3) {
+      setUserError({ username: true, phone: false });
+    } else if (user.phone.toString().length != 10) {
+      setUserError({ username: false, phone: true });
+    } else {
+      return true;
     }
 
-    return false
-  }
+    return false;
+  };
 
-  const updateProfile = async () => {
-    if(!handleValidate()){
-        return
+  const editProfile = async () => {
+    if (!handleValidate()) {
+      return;
     }
     try {
-        await uploadFile(avatar)
-        await updateDoc(doc(db, 'users', currentUser.uid), {
-            username: user.username,
-            avatar: user.avatar
+      // await uploadFile(avatar);
+
+      if(auth.currentUser){
+        await updateProfile(auth.currentUser, {
+          displayName: user.username,
+          photoURL: user.avatar,
         })
-        setEdit(false)
+      }
+
+      await updateDoc(doc(db, "users", currentUser.uid), {
+        username: user.username,
+        avatar: user.avatar,
+        phone: user.phone,
+      });
+      setEdit(false);
     } catch (error) {
-        return error
+      return error;
     }
-  }
+  };
 
   return (
     <main className="h-screen flex items-center justify-center md:p-4">
@@ -102,15 +110,18 @@ const Page = () => {
               <div>
                 <p>Username</p>
                 <input
-                disabled={!edit}
-                minLength={3}
+                  disabled={!edit}
+                  minLength={3}
                   type="text"
                   name="username"
                   onChange={handleChange}
                   value={user.username}
                   className="focus-visible:border-green-500 w-full border-b outline-none transition-all px-4 py-2"
                 />
-                <ErrorText show={userError.username} text="username should be atleast of 3 characters" />
+                <ErrorText
+                  show={userError.username}
+                  text="username should be atleast of 3 characters"
+                />
               </div>
               <div>
                 <p>Email</p>
@@ -124,7 +135,7 @@ const Page = () => {
               <div>
                 <p>Phone No</p>
                 <input
-                disabled={!edit}
+                  disabled={!edit}
                   type="number"
                   name="phone"
                   value={user.phone}
@@ -132,26 +143,47 @@ const Page = () => {
                   className="focus-visible:border-green-500 w-full border-b outline-none transition-all px-4 py-2"
                 />
               </div>
-              <ErrorText show={userError.phone} text="enter a valid phone number" />
+              <ErrorText
+                show={userError.phone}
+                text="enter a valid phone number"
+              />
             </div>
 
             <div className="relative w-fit space-y-2 text-center">
-                <label htmlFor={edit ? "uploadAvatar" : "" }>
+              <label htmlFor={edit ? "uploadAvatar" : ""}>
                 <Image
-                    height={200}
-                    width={200}
-                    src={user.avatar || avatars[4]}
-                    alt="useravatar"
-                    className=" mx-auto w-[200px] h-[200px]"
-                    />
-                </label>
-                <input accept="image/*" id="uploadAvatar" onChange={handleAvatar} multiple={false} type="file" className="hidden" />
-                <i onClick={() => setUser({...user, avatar: currentUser.avatar})} className={`${edit ? "visible" : "invisible"} fi fi-sr-cross-circle absolute hover:text-black text-white top-0 right-10 cursor-pointer`} />
+                  height={200}
+                  width={200}
+                  src={user.avatar || avatars[4]}
+                  alt="useravatar"
+                  className=" mx-auto w-[200px] h-[200px]"
+                />
+              </label>
+              {/* <input accept="image/*" id="uploadAvatar" onChange={handleAvatar} multiple={false} type="file" className="hidden" /> */}
+              <input
+                accept="image/*"
+                id="uploadAvatar"
+                onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                  e.target.files?.length && uploadFile(e.target.files[0]);
+                }}
+                multiple={false}
+                type="file"
+                className="hidden"
+              />
+              <i
+                onClick={() => setUser({ ...user, avatar: currentUser.avatar })}
+                className={`${
+                  edit ? "visible" : "invisible"
+                } fi fi-sr-cross-circle absolute hover:text-black text-white top-0 right-10 cursor-pointer`}
+              />
               <p className="text-green-300">{currentUser.uid}</p>
               <div>
                 {edit ? (
                   <div className="flex justify-center gap-2">
-                    <button onClick={updateProfile} className="basis-1/2 p-2 rounded-lg bg-blue-400 hover:bg-blue-500 text-white flex items-center gap-2 justify-center mx-auto">
+                    <button
+                      onClick={editProfile}
+                      className="basis-1/2 p-2 rounded-lg bg-blue-400 hover:bg-blue-500 text-white flex items-center gap-2 justify-center mx-auto"
+                    >
                       <span>Save</span>
                       <i className="fi fi-sr-check" />
                     </button>

@@ -1,6 +1,7 @@
 "use client"
-import { auth } from "@/utils/firebase";
+import { auth, db } from "@/utils/firebase";
 import { onAuthStateChanged } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
 import { createContext, useContext, useEffect, useState } from "react";
 
 
@@ -10,7 +11,8 @@ type UserType = {
     uid: string,
     email: string,
     avatar: string,
-    logged: boolean
+    logged: boolean,
+    phone?: number
 }
 
 export type AuthContextType = {
@@ -23,15 +25,21 @@ export const AuthState = ({children}: {children: React.ReactNode})=>{
     
     useEffect(()=>{
         
-        onAuthStateChanged(auth, (user) => {
+        onAuthStateChanged(auth, async (user) => {
             if(user){
-                setCurrentUser({
-                    username: user.displayName || "",
-                    uid: user.uid || "",
-                    email: user.email || "",
-                    avatar: user.photoURL || "",
-                    logged: true
-                })
+                try{
+                    const result = await getDoc(doc(db, 'users', user.uid))
+                    setCurrentUser({...result.data(), logged: true} as UserType)
+                    // setCurrentUser({
+                    //     username: user.displayName || "",
+                    //     uid: user.uid || "",
+                    //     email: user.email || "",
+                    //     avatar: user.photoURL || "",
+                    //     logged: true
+                    // })
+                } catch (error){
+                    return error
+                }
             } else{
                 setCurrentUser({
                     username: '',

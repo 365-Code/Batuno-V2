@@ -164,6 +164,7 @@ const MsgSection = () => {
     unsub();
   }, [msgs.id]);
 
+
   return (
 
     
@@ -171,7 +172,7 @@ const MsgSection = () => {
       <Image
         height={800}
         width={800}
-        className="h-full w-full object-fill object-center absolute top-0 left-0 -z-[1] opacity-25"
+        className="h-full w-full object-fill absolute top-0 left-0 -z-[1] opacity-25"
         src="/bg.svg"
         alt=""
       />
@@ -236,7 +237,7 @@ const MsgSection = () => {
             <Msg
               key={i}
               msgTime={msg.msgTime}
-              avatar={msg.avatar}
+              avatar={currentUser.avatar}
               msg={msg.text}
               fromSelf={true}
             />
@@ -244,7 +245,7 @@ const MsgSection = () => {
             <Msg
               key={i}
               msgTime={msg.msgTime}
-              avatar={msg.avatar}
+              avatar={chatUser.avatar}
               msg={msg.text}
               fromSelf={false}
             />

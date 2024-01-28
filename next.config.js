@@ -13,7 +13,7 @@ module.exports = {
             },
             {
                 protocol: 'https',
-                hostname: 'img.freepik.com',
+                hostname: 'firebasestorage.googleapis.com',
               },
           ],
     }
