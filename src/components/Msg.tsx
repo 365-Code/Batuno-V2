@@ -46,8 +46,8 @@ const Msg = ({msg, fromSelf, avatar, msgTime}: {msg: string, fromSelf: boolean, 
         </p>
         <p className={`${fromSelf ? 'flex-row text-right' : 'flex-row-reverse text-left'} flex items-start gap-2 text-sm`}>
           <p className=''>
-          {today.time == msgDate.time ? "just now" : <p>{msgDate.time}</p>}
           {today.day != msgDate.day && <p>{msgDate.day +  " " + ((today.year != msgDate.year) ? msgDate.year : "") }</p>}
+          {today.time == msgDate.time ? "just now" : <p>{msgDate.time}</p>}
           </p>
           <img className='w-[40px] h-[40px] rounded-full' src={avatar} alt="" />
         </p>

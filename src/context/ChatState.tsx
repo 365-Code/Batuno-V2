@@ -15,20 +15,26 @@ type chatUserType = {
 export type ChatUserContextType = {
     chatUser: chatUserType;
     setChatUser: any,
+    clearChatUser: any
 };
 
 const ChatUserContext = createContext<ChatUserContextType | null>(null)
 
 export const ChatUserState = ({children}: {children: React.ReactNode})=>{
 
-    const [chatUser, setChatUser] = useState<chatUserType>({
+    const initialChatUser = {
         username: '',
         uid: '',
         avatar: ''
-    })
+    }
+    const [chatUser, setChatUser] = useState<chatUserType>(initialChatUser)
+
+    const clearChatUser = ()=>{
+        setChatUser(initialChatUser)
+    }
 
     return (
-        <ChatUserContext.Provider value={{chatUser, setChatUser}}>
+        <ChatUserContext.Provider value={{chatUser, setChatUser, clearChatUser}}>
             {children}
         </ChatUserContext.Provider>
     )

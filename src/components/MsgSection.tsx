@@ -4,21 +4,27 @@ import Msg from "./Msg";
 import { messageType, messagesType } from "@/utils";
 import { useAuth } from "@/context/AuthState";
 import { useChatUser } from "@/context/ChatState";
-import { Timestamp, arrayUnion, doc, getDoc, onSnapshot, setDoc, updateDoc } from "firebase/firestore";
+import {
+  Timestamp,
+  arrayUnion,
+  doc,
+  getDoc,
+  onSnapshot,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
 import { db } from "@/utils/firebase";
 
 const MsgSection = () => {
-
   const { currentUser } = useAuth();
-  const { chatUser } = useChatUser();
+  const { chatUser, clearChatUser } = useChatUser();
 
   const [msgs, setMsgs] = useState<messagesType>({
     id: "",
     name: chatUser.username,
     isGroup: false,
-    messages: [] as Array<messageType>
+    messages: [] as Array<messageType>,
   });
-
 
   const [msg, setMsg] = useState("");
 
@@ -43,112 +49,137 @@ const MsgSection = () => {
   // }, [])
 
   const fetchMessages = async () => {
-    const combineId = currentUser.uid > chatUser.uid ? (currentUser.uid + chatUser.uid) : chatUser.uid + currentUser.uid
-    try{
-      const chatRef = doc(db, 'chats', combineId)
+    const combineId =
+      currentUser.uid > chatUser.uid
+        ? currentUser.uid + chatUser.uid
+        : chatUser.uid + currentUser.uid;
+    try {
+      const chatRef = doc(db, "chats", combineId);
       const querySnapshot = await getDoc(chatRef);
-      
-      if(querySnapshot.exists()){
-        const messages = querySnapshot.data().messages as Array<messageType>
-        setMsgs({id: combineId, name: chatUser.username, isGroup: false, messages})
-      } else{
-        setMsgs({id: combineId, name: chatUser.username, isGroup: false, messages: []})
+
+      if (querySnapshot.exists()) {
+        const messages = querySnapshot.data().messages as Array<messageType>;
+        setMsgs({
+          id: combineId,
+          name: chatUser.username,
+          isGroup: false,
+          messages,
+        });
+      } else {
+        setMsgs({
+          id: combineId,
+          name: chatUser.username,
+          isGroup: false,
+          messages: [],
+        });
       }
-    } catch (error){
+    } catch (error) {
       console.log(error);
-      return error
+      return error;
     }
-  }
+  };
 
   const sendMsg = async () => {
-    const combineId = currentUser.uid > chatUser.uid ? (currentUser.uid + chatUser.uid) : (chatUser.uid + currentUser.uid)
-    const chatRef = doc(db, 'chats', combineId)
-    const currentUserRef = doc(db, 'users', currentUser.uid)
-    const chatUserRef = doc(db, 'users', chatUser.uid)
+    const combineId =
+      currentUser.uid > chatUser.uid
+        ? currentUser.uid + chatUser.uid
+        : chatUser.uid + currentUser.uid;
+    const chatRef = doc(db, "chats", combineId);
+    const currentUserRef = doc(db, "users", currentUser.uid);
+    const chatUserRef = doc(db, "users", chatUser.uid);
     try {
-      
-      const result = await getDoc(chatRef)
-      if(!result.exists()){
-        await setDoc(chatRef, {messages: []})
+      const result = await getDoc(chatRef);
+      if (!result.exists()) {
+        await setDoc(chatRef, { messages: [] });
 
         await updateDoc(currentUserRef, {
           contacts: arrayUnion({
             uid: chatUser.uid,
             username: chatUser.username,
-            avatar: chatUser.avatar
-          })
-        })
+            avatar: chatUser.avatar,
+          }),
+        });
 
         await updateDoc(chatUserRef, {
           contacts: arrayUnion({
             uid: currentUser.uid,
             username: currentUser.username,
-            avatar: currentUser.avatar
-          })
-        })
-
-
-      } else{
+            avatar: currentUser.avatar,
+          }),
+        });
+      } else {
         await updateDoc(chatRef, {
           messages: arrayUnion({
             sender: currentUser.uid,
             avatar: currentUser.avatar,
             text: msg,
-            msgTime: Timestamp.now()
-          })
-        })
+            msgTime: Timestamp.now(),
+          }),
+        });
       }
-        
     } catch (error) {
-      return error
+      return error;
     }
-  }
-  
+  };
+
   const handleChange = (e: any) => {
     const value = e.target.value;
     setMsg(value);
   };
 
   const handleMsg = () => {
-    const newMsgs = [...msgs.messages, { sender: currentUser.uid, avatar: currentUser.avatar, text: msg, msgTime: Timestamp.now() }];
+    const newMsgs = [
+      ...msgs.messages,
+      {
+        sender: currentUser.uid,
+        avatar: currentUser.avatar,
+        text: msg,
+        msgTime: Timestamp.now(),
+      },
+    ];
     setMsgs((preVal: any) => ({ ...preVal, messages: newMsgs }));
-    sendMsg()
+    sendMsg();
     setMsg("");
   };
 
   useEffect(() => {
-    chatUser.uid && fetchMessages()
+    chatUser.uid && fetchMessages();
   }, [chatUser]);
 
-  const unsub = async () =>{
+  const unsub = async () => {
     try {
-    onSnapshot(doc(db, 'chats', msgs.id), (doc)=>{
-      if(doc.exists()){
-        const messages = doc.data().messages as Array<messageType>
-        setMsgs((preVal) => ({...preVal, messages}))
-      }
-      })
-  } catch (error) {
-  return error   
-  }
-}
+      onSnapshot(doc(db, "chats", msgs.id), (doc) => {
+        if (doc.exists()) {
+          const messages = doc.data().messages as Array<messageType>;
+          setMsgs((preVal) => ({ ...preVal, messages }));
+        }
+      });
+    } catch (error) {
+      return error;
+    }
+  };
 
   useEffect(() => {
-    unsub()
-  }, [msgs.id])
+    unsub();
+  }, [msgs.id]);
 
   return (
     <section className="relative h-full flex-1 flex flex-col justify-between backdrop-blur-sm bg-[#f4f6f3] w-[500px]">
       <img
         className="h-full w-full object-fill object-center absolute top-0 left-0 -z-[1] opacity-25"
-        src='/bg.svg'
+        src="/bg.svg"
         alt=""
       />
       <div
         id="heading"
         className="w-full h-[65px] z-[2] flex items-center gap-4 top-0 left-0 absolute bg-black/20 backdrop-blur-sm px-4"
       >
-        <img className="w-[40px] h-[40px] rounded-full" src={chatUser.avatar} alt="" />
+
+        <img
+          className="w-[40px] h-[40px] rounded-full"
+          src={chatUser.avatar}
+          alt=""
+        />
         <h3 className="text-2xl py-4">{msgs.name || "Group Name"}</h3>
 
         {msgs.isGroup && (
@@ -179,6 +210,8 @@ const MsgSection = () => {
             <p className="text-green-500 text-xl">+3</p>
           </div>
         )}
+
+        <i onClick={() => (clearChatUser())} className="sm:hidden fi fi-sr-cross ml-auto cursor-pointer"/>
       </div>
 
       <div
@@ -187,9 +220,21 @@ const MsgSection = () => {
       >
         {msgs.messages.map((msg: any, i) =>
           msg.sender == currentUser.uid ? (
-            <Msg key={i} msgTime={msg.msgTime} avatar={msg.avatar} msg={msg.text} fromSelf={true} />
+            <Msg
+              key={i}
+              msgTime={msg.msgTime}
+              avatar={msg.avatar}
+              msg={msg.text}
+              fromSelf={true}
+            />
           ) : (
-            <Msg key={i} msgTime={msg.msgTime} avatar={msg.avatar} msg={msg.text} fromSelf={false} />
+            <Msg
+              key={i}
+              msgTime={msg.msgTime}
+              avatar={msg.avatar}
+              msg={msg.text}
+              fromSelf={false}
+            />
           )
         )}
       </div>
@@ -200,7 +245,10 @@ const MsgSection = () => {
       >
         <div className="hidden md:block w-[40px] h-[40px] rounded-full overflow-hidden">
           <img
-            src={currentUser.avatar || "https://img.freepik.com/free-photo/view-3d-confident-businessman_23-2150709932.jpg?t=st=1705210759~exp=1705214359~hmac=fd5a10a8cb94fb6f8c6c19553a52d1d2c2ebc4856ca83543da774e896ed6fb67&w=740"}
+            src={
+              currentUser.avatar ||
+              "https://img.freepik.com/free-photo/view-3d-confident-businessman_23-2150709932.jpg?t=st=1705210759~exp=1705214359~hmac=fd5a10a8cb94fb6f8c6c19553a52d1d2c2ebc4856ca83543da774e896ed6fb67&w=740"
+            }
             alt=""
             className="res-img"
           />

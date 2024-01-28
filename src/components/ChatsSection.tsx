@@ -12,6 +12,7 @@ import {
 } from "firebase/firestore";
 import { db } from "@/utils/firebase";
 import { useAuth } from "@/context/AuthState";
+import { useChatUser } from "@/context/ChatState";
 
 const ChatsSection = () => {
   const [chatUsers, setChatUsers] = useState([] as Array<any>);
@@ -38,6 +39,7 @@ const ChatsSection = () => {
   // }, []);
 
   const { currentUser } = useAuth();
+  const { chatUser } = useChatUser();
 
   // const usersRef = collection(db, 'users')
 
@@ -48,8 +50,6 @@ const ChatsSection = () => {
 
       if (result.exists()) {
         const { contacts } = result.data();
-        console.log(result.data());
-        
         setAllChats(contacts);
       }
     } catch (error) {
@@ -79,9 +79,8 @@ const ChatsSection = () => {
   useEffect(() => {
     searchInput ? searchChat() : setSearchChats([]);
   }, [searchInput]);
-
   return (
-    <section className="w-0 overflow-hidden md:w-[300px] px-0 gap-2 flex flex-col">
+    <section className={`${chatUser.uid ? 'w-0' : 'w-full'} overflow-hidden sm:w-[250px] md:w-[300px] px-0 gap-2 flex flex-col`}>
       <div
         id="search"
         className="bg-[#dbdcff] px-4 mx-4 rounded-lg flex items-center py-1"
