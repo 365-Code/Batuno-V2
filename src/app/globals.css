@@ -48,7 +48,7 @@ input::-webkit-inner-spin-button {
 }
 
 .icon-selected{
-  @apply text-green-500 border-r-4 border-green-500;
+  @apply text-green-500 border-l-4 border-green-500;
 }
 
 /* .icon-selected{

@@ -47,7 +47,7 @@ const NavSection = () => {
       <button
         onClick={() => signOut(auth)}
         id="profile"
-        className="px-2 py-4 nav-icon"
+        className="py-4 nav-icon"
       >
         {/* <img src={currentUser.avatar || avatars[0]} alt="" className='h-[48px] w-[48px] rounded-full'/> */}
         <span className="text-sm">log</span>
