@@ -10,9 +10,6 @@ const NavSection = () => {
 
   const {currentUser} = useAuth()
 
-  console.log(currentUser);
-  
-
   return (
     <section className='min-w-fit p-0 shadow-sm shadow-black/20 gap-8 flex flex-col items-center justify-between'>
       <div id='logo' className='py-4 px-2'>
@@ -31,7 +28,7 @@ const NavSection = () => {
         <Link href={'/'} className='nav-icon'>
           <i className="fi fi-sr-archive p-4" />
         </Link>
-        <Link href={'/'} className='nav-icon'>
+        <Link href={'/settings'} className='nav-icon'>
           <i className="fi fi-sr-settings-sliders p-4" />
         </Link>
 

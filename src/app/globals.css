@@ -29,6 +29,12 @@ section{
   @apply bg-[#202022];
 }
 
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 .fi{
   @apply flex items-center justify-center;
 }

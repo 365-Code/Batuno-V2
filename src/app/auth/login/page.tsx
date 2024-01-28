@@ -32,7 +32,7 @@ const Page = () => {
     
     const login = async ()=>{
         try{
-            const result = await signInWithEmailAndPassword(auth, user.email, user.password)
+            await signInWithEmailAndPassword(auth, user.email, user.password)
             toast.success("Log In Successful")
             nav.push('/')
         } catch (error: any ){
