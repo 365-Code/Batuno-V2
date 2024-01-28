@@ -10,7 +10,7 @@
 }
 
 body{
-  @apply h-screen w-screen overflow-hidden scroll-smooth text-slate-600 selection:bg-green-300 selection:text-white transition-all;
+  @apply w-screen overflow-x-hidden scroll-smooth text-slate-600 selection:bg-green-300 selection:text-white transition-all;
 }
 
 img{
