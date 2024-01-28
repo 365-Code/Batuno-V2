@@ -165,7 +165,9 @@ const MsgSection = () => {
   }, [msgs.id]);
 
   return (
-    <section className="relative h-full flex-1 flex flex-col justify-between backdrop-blur-sm bg-[#f4f6f3]">
+
+    
+    <section className="relative flex-1 flex flex-col justify-between backdrop-blur-sm bg-[#f4f6f3]">
       <Image
         height={800}
         width={800}
