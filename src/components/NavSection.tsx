@@ -1,15 +1,14 @@
 "use client"
-import { useAuth } from '@/context/AuthState'
-import { avatars } from '@/utils'
 import { auth } from '@/utils/firebase'
 import { signOut } from 'firebase/auth'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import React from 'react'
 
 const NavSection = () => {
 
-  const {currentUser} = useAuth()
-
+  const pathname = usePathname()
+  
   return (
     <section className='min-w-fit p-0 shadow-sm shadow-black/20 gap-8 flex flex-col items-center justify-between'>
       <div id='logo' className='py-4 px-2'>
@@ -17,7 +16,7 @@ const NavSection = () => {
       </div>
 
       <div id='nav' className='flex-1 flex flex-col gap-2 w-full'>
-        <Link href={'/'} className='nav-icon icon-selected'>
+        <Link href={'/'} className={`${pathname == '/' && "icon-selected"} nav-icon`}>
           <i className="fi fi-sr-comments p-4" />
         </Link>
 
@@ -28,7 +27,7 @@ const NavSection = () => {
         <Link href={'/'} className='nav-icon'>
           <i className="fi fi-sr-archive p-4" />
         </Link>
-        <Link href={'/settings'} className='nav-icon'>
+        <Link href={'/settings'} className={`${pathname == '/settings' && "icon-selected"} nav-icon`}>
           <i className="fi fi-sr-settings-sliders p-4" />
         </Link>
 
