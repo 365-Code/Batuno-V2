@@ -11,7 +11,7 @@ const NavSection = () => {
   const nav = useRouter()
 
   return (
-    <section className="min-w-fit p-0 shadow-sm shadow-black/20 gap-8 flex flex-col items-center justify-between">
+    <section className="min-w-fit p-0 shadow-sm shadow-black/20 gap-8 flex flex-col items-center justify-between dark:bg-[#0d121b]">
       <div id="logo" className="py-4 px-2">
         <Image
           height={100}

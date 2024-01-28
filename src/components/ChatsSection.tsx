@@ -80,10 +80,10 @@ const ChatsSection = () => {
     searchInput ? searchChat() : setSearchChats([]);
   }, [searchInput]);
   return (
-    <section className={`${chatUser.uid ? 'w-0' : 'w-full'} overflow-hidden sm:w-[250px] md:w-[300px] px-0 gap-2 flex flex-col`}>
+    <section className={`${chatUser.uid ? 'w-0' : 'w-full'} overflow-hidden sm:w-[250px] md:w-[300px] px-0 gap-2 flex flex-col dark:bg-[#0d121b]`}>
       <div
         id="search"
-        className="bg-[#dbdcff] px-4 mx-4 rounded-lg flex items-center py-1"
+        className="border px-4 mx-4 rounded-lg flex items-center py-1"
       >
         <i className="fi fi-rr-search" />
         <input
@@ -92,7 +92,7 @@ const ChatsSection = () => {
           }
           type="search"
           placeholder="Search User"
-          className="font-light w-full text-slate-500 border-none outline-none bg-transparent py-1 pl-2"
+          className="font-light w-full text-slate-500 dark:text-white border-none outline-none bg-transparent py-1 pl-2"
         />
       </div>
 
@@ -130,7 +130,7 @@ const ChatsSection = () => {
       </div> */}
 
       <div id="all-chats" className="h-auto">
-        <h3 className="text-slate-500 py-1 px-4">All Chats</h3>
+        <h3 className="text-slate-500 dark:text-white py-1 px-4">All Chats</h3>
         <div className="h-[240px] overflow-y-scroll custom-scrollbar">
           {allChats?.map((u, i) => (
             <ChatCard

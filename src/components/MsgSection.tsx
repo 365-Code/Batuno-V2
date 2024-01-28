@@ -168,17 +168,17 @@ const MsgSection = () => {
   return (
 
     
-    <section className="relative flex-1 flex flex-col justify-between backdrop-blur-sm bg-[#f4f6f3]">
+    <section className="relative flex-1 flex flex-col justify-between backdrop-blur-sm bg-[#f4f6f3] dark:bg-[#080b11]">
       <Image
         height={800}
         width={800}
-        className="h-full w-full object-fill absolute top-0 left-0 -z-[1] opacity-25"
+        className="h-full w-full object-cover absolute top-0 left-0 -z-[1] opacity-25 dark:opacity-10"
         src="/bg.svg"
         alt=""
       />
       <div
         id="heading"
-        className="w-full h-[65px] z-[2] flex items-center gap-4 top-0 left-0 absolute bg-black/20 backdrop-blur-sm px-4"
+        className="w-full h-[65px] z-[2] flex items-center gap-4 top-0 left-0 absolute bg-black/20 dark:bg-[#0d121b]  backdrop-blur-sm px-4"
       >
 
         <Image
@@ -255,7 +255,7 @@ const MsgSection = () => {
 
       <div
         id="send"
-        className="flex gap-1 md:gap-6 items-center justify-between max-w-full"
+        className="flex gap-1 md:gap-4 items-center justify-between max-w-full"
       >
         <div className="hidden md:block w-[40px] h-[40px] rounded-full overflow-hidden">
           <Image

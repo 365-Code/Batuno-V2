@@ -6,7 +6,7 @@ import Image from 'next/image'
 const DetailsSection = () => {
 
   return (
-    <section className="w-[300px] space-y-4">
+    <section className="w-[300px] space-y-4 dark:bg-[#0d121b]">
 
       <div className='flex justify-end w-full py-2'>
         <button className='hover:text-green-400'>

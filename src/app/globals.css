@@ -10,7 +10,7 @@
 }
 
 body{
-  @apply w-screen overflow-x-hidden scroll-smooth text-slate-600 selection:bg-green-300 selection:text-white transition-all;
+  @apply w-screen overflow-x-hidden dark:text-white dark:bg-[#151b28] scroll-smooth text-slate-600 selection:bg-green-300 selection:text-white transition-all;
 }
 
 img{
