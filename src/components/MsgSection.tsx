@@ -154,7 +154,7 @@ const MsgSection = () => {
   }, [msgs.id]);
 
   return (
-    <section className="relative flex-1 flex flex-col justify-between backdrop-blur-sm bg-[#f4f6f3] dark:bg-[#080b11]">
+    <section className="relative flex-1 flex flex-col justify-between backdrop-blur-sm bg-[#f4f6f3] dark:bg-[#080b11] dark:border-r dark:border-white/10">
       {/* <Image
         height={800}
         width={800}
@@ -165,7 +165,7 @@ const MsgSection = () => {
       /> */}
       <div
         id="heading"
-        className="w-full h-[65px] z-[2] flex items-center gap-4 top-0 left-0 absolute bg-black/20 dark:bg-[#0d121b]  backdrop-blur-sm px-4"
+        className="w-full h-[65px] z-[2] flex items-center gap-4 top-0 left-0 absolute bg-black/20 dark:bg-[#0d121b]  backdrop-blur-sm px-4 dark:border-b dark:border-white/10"
       >
         <Image
           height={100}

@@ -41,7 +41,7 @@ const Msg = ({msg, fromSelf, avatar, msgTime}: {msg: string, fromSelf: boolean, 
   // console.log(msgDate);
 
   return (
-    <div ref={scrollRef} className={`py-1 gap-1 flex flex-col ${fromSelf? 'items-end' : 'items-start'}`}>
+    <div ref={scrollRef} className={`py-1 gap-1 flex flex-col ${fromSelf? 'items-end' : 'items-start'}`}> {/*dark:bg-green-400*/}
         <p className={`rounded-md p-4 w-fit max-w-full sm:max-w-[400px] ${fromSelf ? 'bg-green-400/30 dark:bg-green-400 backdrop-blur-sm' : 'bg-white dark:bg-[#0d121b]'} `}>
             {msg}
         </p>

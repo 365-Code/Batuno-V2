@@ -83,7 +83,7 @@ const ChatsSection = () => {
     <section
       className={`${
         chatUser.uid ? "w-0" : "w-full"
-      } overflow-hidden sm:w-[250px] md:w-[300px] px-0 gap-2 flex flex-col dark:bg-[#0d121b]`}
+      } overflow-hidden sm:w-[250px] md:w-[300px] px-0 gap-2 flex flex-col dark:bg-[#0d121b] dark:border-r dark:border-white/10`}
     >
       <div
         id="search"
