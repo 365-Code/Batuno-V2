@@ -135,7 +135,7 @@ const ChatsSection = () => {
 
       <div id="all-chats" className="h-auto">
         <h3 className="text-slate-500 dark:text-white py-1 px-4">All Chats</h3>
-        {!allChats.length && <p>No Contacts Yet</p> }
+        {!allChats.length && <p className="py-2 px-4">No Contacts Yet</p> }
         <div className="h-[240px] overflow-y-scroll custom-scrollbar">
           {allChats?.map((u, i) => (
             <ChatCard

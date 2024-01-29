@@ -155,13 +155,14 @@ const MsgSection = () => {
 
   return (
     <section className="relative flex-1 flex flex-col justify-between backdrop-blur-sm bg-[#f4f6f3] dark:bg-[#080b11]">
-      <Image
+      {/* <Image
         height={800}
         width={800}
         className="h-full w-full object-cover absolute top-0 left-0 -z-[1] opacity-25 dark:opacity-10"
-        src="/bg.svg"
+        // src="/bg.svg"
+        src={'https://img.freepik.com/free-vector/abstract-background-with-squares_23-2148995948.jpg?w=1060&t=st=1706539130~exp=1706539730~hmac=8e3965061f49a7402fd4a92176a566ba1fd82830b4005cc234ac13a07da37054'}
         alt=""
-      />
+      /> */}
       <div
         id="heading"
         className="w-full h-[65px] z-[2] flex items-center gap-4 top-0 left-0 absolute bg-black/20 dark:bg-[#0d121b]  backdrop-blur-sm px-4"
