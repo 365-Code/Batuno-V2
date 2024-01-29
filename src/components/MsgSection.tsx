@@ -29,26 +29,6 @@ const MsgSection = () => {
 
   const [msg, setMsg] = useState("");
 
-  // useEffect(() => {
-  //   setMsgs({ name: chatUser.username, isGroup: false, messages: [] });
-  // }, [chatUser]);
-
-  // useEffect(() => {
-
-  //   chats.forEach((cht) => {
-  //     let ind = cht.users.findIndex((u) => u == currentUser.uId)
-  //     ind = ind && cht.users.findIndex((u) => u == chatUser?.uId)
-  //     if(cht.users.length <= 2 && ind){
-  //       setMsgs({
-  //         name: chatUser?.uId,
-  //         messages: [...cht.chat.texts],
-  //         isGroup: false
-  //       })
-  //     }
-  //   })
-
-  // }, [])
-
   const fetchMessages = async () => {
     const combineId =
       currentUser.uid > chatUser.uid

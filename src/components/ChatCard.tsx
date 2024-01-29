@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { useChatUser } from "@/context/ChatState";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -14,19 +14,20 @@ const ChatCard = ({
   active?: boolean;
   cUid: string;
 }) => {
-
-  const {chatUser ,setChatUser} = useChatUser()
-  const nav = useRouter()
-  const handleChatUser = ()=>{
-    setChatUser({username: cName,uid: cUid, avatar})
-    nav.push(`/?chat=${cName}`)
-  }
+  const { chatUser, setChatUser } = useChatUser();
+  const nav = useRouter();
+  const handleChatUser = () => {
+    setChatUser({ username: cName, uid: cUid, avatar });
+    nav.push(`/?chat=${cName}`);
+  };
 
   return (
     <div
-    onClick={handleChatUser}
+      onClick={handleChatUser}
       className={`flex px-4 py-2 items-center justify-start gap-4 cursor-pointer ${
-        chatUser?.uid == cUid ? "bg-green-400 text-white" : " hover:text-green-400"
+        chatUser?.uid == cUid
+          ? "bg-green-400 text-white"
+          : " hover:text-green-400"
       }`}
     >
       <div className="w-[40px] h-[40px] rounded-full overflow-hidden">
@@ -41,7 +42,7 @@ const ChatCard = ({
           className="res-img"
         />
       </div>
-      <p>{cName || 'Batuno'}</p>
+      <p>{cName || "Batuno"}</p>
     </div>
   );
 };

@@ -45,12 +45,12 @@ const Msg = ({msg, fromSelf, avatar, msgTime}: {msg: string, fromSelf: boolean, 
         <p className={`rounded-md p-4 w-fit max-w-full sm:max-w-[400px] ${fromSelf ? 'bg-green-400/30 dark:bg-green-400 backdrop-blur-sm' : 'bg-white dark:bg-[#0d121b]'} `}>
             {msg}
         </p>
-        <p className={`${fromSelf ? 'flex-row text-right' : 'flex-row-reverse text-left'} flex items-start gap-2 text-sm`}>
+        <p className={`${fromSelf ? 'flex-row text-right' : 'flex-row-reverse text-left'} flex items-start gap-2 text-xs`}>
           <p className=''>
           {today.day != msgDate.day && <p>{msgDate.day +  " " + ((today.year != msgDate.year) ? msgDate.year : "") }</p>}
           {today.time == msgDate.time ? "just now" : <p>{msgDate.time}</p>}
           </p>
-          <Image height={100} width={100} className='w-[40px] h-[40px] rounded-full' src={avatar} alt="avatar" />
+          <Image height={100} width={100} className='w-[30px] h-[30px] rounded-full' src={avatar} alt="avatar" />
         </p>
     </div>
   )

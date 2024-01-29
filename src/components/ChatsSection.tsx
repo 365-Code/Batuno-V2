@@ -80,10 +80,14 @@ const ChatsSection = () => {
     searchInput ? searchChat() : setSearchChats([]);
   }, [searchInput]);
   return (
-    <section className={`${chatUser.uid ? 'w-0' : 'w-full'} overflow-hidden sm:w-[250px] md:w-[300px] px-0 gap-2 flex flex-col dark:bg-[#0d121b]`}>
+    <section
+      className={`${
+        chatUser.uid ? "w-0" : "w-full"
+      } overflow-hidden sm:w-[250px] md:w-[300px] px-0 gap-2 flex flex-col dark:bg-[#0d121b]`}
+    >
       <div
         id="search"
-        className="border px-4 mx-4 rounded-lg flex items-center py-1"
+        className="border focus-within:border-green-500  px-4 mx-4 rounded-lg flex items-center py-1"
       >
         <i className="fi fi-rr-search" />
         <input
@@ -131,6 +135,7 @@ const ChatsSection = () => {
 
       <div id="all-chats" className="h-auto">
         <h3 className="text-slate-500 dark:text-white py-1 px-4">All Chats</h3>
+        {!allChats.length && <p>No Contacts Yet</p> }
         <div className="h-[240px] overflow-y-scroll custom-scrollbar">
           {allChats?.map((u, i) => (
             <ChatCard
