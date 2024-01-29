@@ -47,7 +47,7 @@ const Page = () => {
         username: user.username,
         email: result.user.email,
         avatar: avatar,
-        favourites: [],
+        // favourites: [],
       })
 
       console.log(userRef);

@@ -79,6 +79,7 @@ const ChatsSection = () => {
   useEffect(() => {
     searchInput ? searchChat() : setSearchChats([]);
   }, [searchInput]);
+  
   return (
     <section
       className={`${
