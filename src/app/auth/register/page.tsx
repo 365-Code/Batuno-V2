@@ -83,7 +83,7 @@ const Page = () => {
     <main className="w-screen h-screen flex items-center justify-center">
       <form
         onSubmit={handleSubmit}
-        className="bg-[#f8f8f8] w-[450px] rounded-lg h-auto flex flex-col items-center gap-4 p-4"
+        className="bg-[#f8f8f8] dark:bg-[#0d121b] w-[450px] max-w-full rounded-lg h-auto flex flex-col items-center gap-4 p-4 md:p-8"
       >
         <h1 className="text-3xl font-semibold tracking-normal">Batuno Chat</h1>
         <h2 className="text-2xl">Register</h2>
@@ -94,7 +94,7 @@ const Page = () => {
             onChange={handleChange}
             type="text"
             placeholder="Username"
-            className="input-fill flex-1 border-b-2 focus:outline-green-500 p-4 rounded-lg"
+            className="input-fill flex-1 border focus:border-green-500 p-4 rounded-lg"
           />
           <label
             htmlFor="avatar"
@@ -116,7 +116,7 @@ const Page = () => {
           onChange={handleChange}
           type="email"
           placeholder="Email"
-          className="input-fill w-full border-b-2 focus:outline-green-500 p-4 rounded-lg"
+          className="input-fill w-full border focus:border-green-500 p-4 rounded-lg"
         />
         <input
           name="password"
@@ -124,11 +124,11 @@ const Page = () => {
           onChange={handleChange}
           type="password"
           placeholder="Password"
-          className="input-fill w-full border-b-2 focus:outline-green-500 p-4 rounded-lg"
+          className="input-fill w-full border focus:border-green-500 p-4 rounded-lg"
         />
         <button
           type="submit"
-          className="focus-within:outline-green-50 p-4 text-white bg-green-400 hover:bg-green-500 w-full"
+          className="p-4 text-white bg-green-400 hover:bg-green-500 w-full"
         >
           Register
         </button>

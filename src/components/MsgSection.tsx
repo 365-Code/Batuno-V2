@@ -91,7 +91,16 @@ const MsgSection = () => {
     try {
       const result = await getDoc(chatRef);
       if (!result.exists()) {
-        await setDoc(chatRef, { messages: [] });
+        await setDoc(chatRef, {
+          messages: [
+            {
+              sender: currentUser.uid,
+              avatar: currentUser.avatar,
+              text: msg,
+              msgTime: Timestamp.now(),
+            },
+          ],
+        });
 
         await updateDoc(currentUserRef, {
           contacts: arrayUnion({
@@ -164,10 +173,7 @@ const MsgSection = () => {
     unsub();
   }, [msgs.id]);
 
-
   return (
-
-    
     <section className="relative flex-1 flex flex-col justify-between backdrop-blur-sm bg-[#f4f6f3] dark:bg-[#080b11]">
       <Image
         height={800}
@@ -180,10 +186,9 @@ const MsgSection = () => {
         id="heading"
         className="w-full h-[65px] z-[2] flex items-center gap-4 top-0 left-0 absolute bg-black/20 dark:bg-[#0d121b]  backdrop-blur-sm px-4"
       >
-
         <Image
-        height={100}
-        width={100}
+          height={100}
+          width={100}
           className="w-[40px] h-[40px] rounded-full"
           src={chatUser.avatar}
           alt=""
@@ -195,8 +200,8 @@ const MsgSection = () => {
             <div className="relative flex items-center h-[36px] w-[72px] py-4 justify-center">
               <div className="absolute z-[2] top-0 left-0 w-[36px] h-[36px] rounded-full overflow-hidden">
                 <Image
-        height={100}
-        width={100}
+                  height={100}
+                  width={100}
                   src="https://img.freepik.com/free-photo/view-3d-confident-businessman_23-2150709932.jpg?t=st=1705210759~exp=1705214359~hmac=fd5a10a8cb94fb6f8c6c19553a52d1d2c2ebc4856ca83543da774e896ed6fb67&w=740"
                   alt=""
                   className="res-img"
@@ -204,8 +209,8 @@ const MsgSection = () => {
               </div>
               <div className="absolute z-[1] top-0 left-4 w-[36px] h-[36px] rounded-full overflow-hidden">
                 <Image
-        height={100}
-        width={100}
+                  height={100}
+                  width={100}
                   src="https://img.freepik.com/free-photo/view-3d-confident-businessman_23-2150709932.jpg?t=st=1705210759~exp=1705214359~hmac=fd5a10a8cb94fb6f8c6c19553a52d1d2c2ebc4856ca83543da774e896ed6fb67&w=740"
                   alt=""
                   className="res-img"
@@ -213,8 +218,8 @@ const MsgSection = () => {
               </div>
               <div className="absolute top-0 left-8 w-[36px] h-[36px] rounded-full overflow-hidden">
                 <Image
-        height={100}
-        width={100}
+                  height={100}
+                  width={100}
                   src="https://img.freepik.com/free-photo/view-3d-confident-businessman_23-2150709932.jpg?t=st=1705210759~exp=1705214359~hmac=fd5a10a8cb94fb6f8c6c19553a52d1d2c2ebc4856ca83543da774e896ed6fb67&w=740"
                   alt=""
                   className="res-img"
@@ -225,7 +230,10 @@ const MsgSection = () => {
           </div>
         )}
 
-        <i onClick={() => (clearChatUser())} className="sm:hidden fi fi-sr-cross ml-auto cursor-pointer"/>
+        <i
+          onClick={() => clearChatUser()}
+          className="sm:hidden fi fi-sr-cross ml-auto cursor-pointer"
+        />
       </div>
 
       <div
@@ -259,8 +267,8 @@ const MsgSection = () => {
       >
         <div className="hidden md:block w-[40px] h-[40px] rounded-full overflow-hidden">
           <Image
-        height={100}
-        width={100}
+            height={100}
+            width={100}
             src={
               currentUser.avatar ||
               "https://img.freepik.com/free-photo/view-3d-confident-businessman_23-2150709932.jpg?t=st=1705210759~exp=1705214359~hmac=fd5a10a8cb94fb6f8c6c19553a52d1d2c2ebc4856ca83543da774e896ed6fb67&w=740"
@@ -270,28 +278,29 @@ const MsgSection = () => {
           />
         </div>
 
-        <div className="bg-white focus-within:ring-green-500 focus-within:ring-1 rounded-md flex-1 flex items-center px-4 gap-4">
-          <input
-            name="msg"
-            value={msg}
-            onChange={handleChange}
-            type="text"
-            className="w-full py-4 outline-none"
-            placeholder="Write a reply"
-          />
-          <div className="flex gap-4 items-center">
-            <i className="fi fi-sr-clip hover:text-green-500 cursor-pointer text-xl" />
-            <i className="fi fi-sr-smile-plus hover:text-green-500 cursor-pointer text-xl" />
+        <div className="flex items-center gap-2 w-full h-[50px]">
+          <div className="bg-white dark:bg-[#0d121b] focus-within:ring-green-500 focus-within:ring-1 rounded-md flex-1 flex items-center px-4 gap-4">
+            <input
+              name="msg"
+              value={msg}
+              onChange={handleChange}
+              type="text"
+              className="w-full py-3 sm:py-4 outline-none bg-transparent"
+              placeholder="Write a reply"
+            />
+            <div className="flex gap-4 items-center">
+              <i className="fi fi-sr-clip hover:text-green-500 cursor-pointer text-xl" />
+              <i className="fi fi-sr-smile-plus hover:text-green-500 cursor-pointer text-xl" />
+            </div>
           </div>
+          <button
+            onClick={handleMsg}
+            className="flex items-center  gap-2 rounded-md p-4 bg-green-400 hover:bg-green-500 text-white"
+          >
+            <i className="fi fi-sr-paper-plane" />
+            <span className="hidden sm:block">Send</span>
+          </button>
         </div>
-
-        <button
-          onClick={handleMsg}
-          className="flex items-center gap-2 rounded-md px-4 sm:px-6 py-4 bg-green-400 hover:bg-green-500 text-white"
-        >
-          <i className="fi fi-sr-paper-plane" />
-          <span className="hidden sm:block">Send</span>
-        </button>
       </div>
     </section>
   );

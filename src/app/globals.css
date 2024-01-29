@@ -71,5 +71,5 @@ input::-webkit-inner-spin-button {
 }
 
 .input-fill{
-  @apply autofill:shadow-[inset_0_0_0px_1000px_#dcfce7];
+  @apply autofill:shadow-[inset_0_0_0px_1000px_#dcfce7] dark:bg-transparent outline-none;
 }
