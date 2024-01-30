@@ -1,22 +1,14 @@
 "use client"
+import { UserType, chatUserType } from "@/utils";
 import { auth, db } from "@/utils/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { createContext, useContext, useEffect, useState } from "react";
 
-
-
-type UserType = {
-    username: string,
-    uid: string,
-    email: string,
-    avatar: string,
-    logged: boolean,
-    phone?: number
-}
-
 export type AuthContextType = {
     currentUser: UserType;
+    addFavourite: any,
+    removeFavourite: any
 };
 
 const AuthContext = createContext<AuthContextType | null>(null)
@@ -46,7 +38,8 @@ export const AuthState = ({children}: {children: React.ReactNode})=>{
                     uid: '',
                     email: '',
                     avatar: '',
-                    logged: false
+                    logged: false,
+                    favourites: []
                 })
             }
         })
@@ -58,10 +51,21 @@ export const AuthState = ({children}: {children: React.ReactNode})=>{
         uid: '',
         email: '',
         avatar: '',
-        logged: false
+        logged: false,
+        favourites: []
     })
+
+    const addFavourite = (newUser: chatUserType) => {
+        setCurrentUser((preVal) =>( {...preVal, favourites: [...preVal.favourites, newUser]}))
+    }
+    
+    const removeFavourite = (id: string) => {
+        const favourites = currentUser.favourites.filter((c) => (c.uid != id) )
+        setCurrentUser((preVal) =>( {...preVal, favourites}))
+    }
+
     return (
-        <AuthContext.Provider value={{currentUser}}>
+        <AuthContext.Provider value={{currentUser, addFavourite, removeFavourite}}>
             {children}
         </AuthContext.Provider>
     )

@@ -22,18 +22,16 @@ const Home = () => {
 
   return (
     <main className="h-screen flex items-center justify-center md:p-4">
-      <div className="max-w-full w-full h-full flex shadow-sm shadow-black/50">
+      <div className="max-w-full w-full h-full flex md:justify-center">
         <NavSection />
         <ChatsSection />
         {
           chatUser.uid
           ?
-          <>
           <MsgSection />
-          <DetailsSection />
-          </> 
           : <WelcomeSection/>
         }
+        <DetailsSection />
       </div>
     </main>
   );

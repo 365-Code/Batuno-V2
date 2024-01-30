@@ -1,7 +1,7 @@
 "use client";
 import React, { ChangeEvent, useEffect, useState } from "react";
 import ChatCard from "./ChatCard";
-import { avatars, chats, users } from "@/utils";
+import { avatars, chatUserType, chats, users } from "@/utils";
 import {
   collection,
   doc,
@@ -17,6 +17,7 @@ import { useChatUser } from "@/context/ChatState";
 const ChatsSection = () => {
   const [chatUsers, setChatUsers] = useState([] as Array<any>);
   const [allChats, setAllChats] = useState([] as Array<any>);
+  const [favChats, setFavChats] = useState([] as Array<chatUserType>);
   const [currentChat, setCurrentChat] = useState([] as Array<any>);
   const [allGroups, setAllGroups] = useState([] as Array<any>);
   const [searchInput, setSearchInput] = useState("");
@@ -41,16 +42,34 @@ const ChatsSection = () => {
   const { currentUser } = useAuth();
   const { chatUser } = useChatUser();
 
-  // const usersRef = collection(db, 'users')
-
   const getMyChats = async () => {
     try {
       const userRef = doc(db, "users", currentUser.uid);
       const result = await getDoc(userRef);
 
       if (result.exists()) {
-        const { contacts } = result.data();
-        setAllChats(contacts);
+        const { contacts, favourites } = result.data();
+        let conts = [] as Array<chatUserType>
+        
+        contacts.forEach( async (element: string) => {
+          const queryRef = doc(db, 'users', element)
+          const query = await getDoc(queryRef)
+          if(query.exists()){
+            conts.push(query.data() as chatUserType)
+          }
+        });
+        setAllChats(conts);
+
+        let favs = [] as Array<chatUserType>
+        favourites.forEach( async (element: string) => {
+          const queryRef = doc(db, 'users', element)
+          const query = await getDoc(queryRef)
+          if(query.exists()){
+            favs.push(query.data() as chatUserType)
+          }
+        });
+        setFavChats(favs)
+
       }
     } catch (error) {
       return error;
@@ -66,9 +85,12 @@ const ChatsSection = () => {
     );
     const results = await getDocs(q);
     let searchUsers = [] as Array<any>;
-    results.forEach((doc) => {
+    results?.forEach((doc) => {
       searchUsers.push(doc.data());
     });
+    if(results.empty){
+      searchUsers = allChats.filter((u) => u.username.toLowerCase().includes(searchInput.toLowerCase()))
+    }
     setSearchChats(searchUsers);
   };
 
@@ -83,10 +105,10 @@ const ChatsSection = () => {
   return (
     <section
       className={`${
-        chatUser.uid ? "w-0" : "w-full"
-      } overflow-hidden sm:w-[250px] md:w-[300px] px-0 gap-2 flex flex-col dark:bg-[#0d121b] dark:border-r dark:border-white/10`}
+        chatUser.uid ? "w-0 dark:border-0" : "w-full dark:border-r"
+      } overflow-hidden sm:w-[250px] md:w-[300px] px-0 gap-2 flex flex-col dark:bg-[#0d121b] sm:dark:border-r dark:border-white/10`}
     >
-      <div
+    <div
         id="search"
         className="border focus-within:border-green-500  px-4 mx-4 rounded-lg flex items-center py-1"
       >
@@ -111,28 +133,33 @@ const ChatsSection = () => {
                 cUid={u.uid}
                 cName={u.username}
                 avatar={u.avatar}
+                inactive={true}
               />
             ))}
           </div>
         </div>
       )}
 
-      {/* <div id="favourites" className="h-auto">
-        <h3 className="text-slate-500 py-1 px-4">Favourites</h3>
-        <div className="h-[140px] overflow-y-scroll custom-scrollbar">
-          {users.map(
-            (u, i) =>
-              i > 3 && (
-                <ChatCard
-                  key={u.uId}
-                  cUid={u.uId}
-                  cName={u.name}
-                  avatar={avatars[i]}
-                />
-              )
-          )}
-        </div>
-      </div> */}
+      {
+        favChats.length>0 &&
+          <div id="favourites" className="h-auto">
+            <h3 className="text-slate-500 dark:text-white py-1 px-4">Favourites</h3>
+            <div className="max-h-[140px] overflow-y-scroll custom-scrollbar">
+              {favChats.map(
+                (u) =>
+                  (
+                    <ChatCard
+                      key={u.uid}
+                      cUid={u.uid}
+                      cName={u.username}
+                      avatar={u.avatar}
+                      inactive={true}
+                    />
+                  )
+              )}
+            </div>
+          </div>
+      }
 
       <div id="all-chats" className="h-auto">
         <h3 className="text-slate-500 dark:text-white py-1 px-4">All Chats</h3>
@@ -159,7 +186,7 @@ const ChatsSection = () => {
           </h3>
           <div className="max-h-[140px] overflow-y-scroll custom-scrollbar">
             {allGroups.map((g, i) => (
-              <ChatCard key={i} cName={g} active={false} cUid={g.id} />
+              <ChatCard key={i} cName={g} cUid={g.id} />
             ))}
             {/* <ChatCard cName='Coffee Nerds' active={true}/>
             <ChatCard cName='App Chemistry' active={false}/> */}

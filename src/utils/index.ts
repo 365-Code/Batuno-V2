@@ -11,6 +11,32 @@ export type messagesType = {
     messages: Array<messageType>
   }
 
+ export type UserType = {
+    username: string,
+    uid: string,
+    email: string,
+    avatar: string,
+    logged: boolean,
+    phone?: number,
+    favourites: Array<any>
+}
+
+export type chatUserType = {
+    uid: string,
+    username: string,
+    avatar: string
+}
+
+export type detailType = {
+    uid: string,
+    username: string,
+    avatar: string,
+    email: string,
+    fav?: boolean
+}
+
+
+
 export const users = [
     {
         uId: '#073781e8',

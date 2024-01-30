@@ -16,8 +16,8 @@ import { db } from "@/utils/firebase";
 import { useAuth } from "@/context/AuthState";
 
 const DetailsSection = () => {
-  const { chatUser } = useChatUser();
-  const { currentUser } = useAuth();
+  const { chatUser, chatDetails, clearChatDetails } = useChatUser();
+  const { currentUser, addFavourite, removeFavourite } = useAuth();
   const [fav, setFav] = useState<boolean>(false);
   const [details, setDetails] = useState({
     username: "",
@@ -28,7 +28,7 @@ const DetailsSection = () => {
 
   const fetchDetails = async () => {
     try {
-      const chatRef = doc(db, "users", chatUser.uid);
+      const chatRef = doc(db, "users", chatDetails);
       const result = await getDoc(chatRef);
       if (result.exists()) {
         const chatDetails = result.data();
@@ -39,38 +39,50 @@ const DetailsSection = () => {
           email: chatDetails.email,
         });
       }
+      const ind = currentUser.favourites.findIndex((c) => (c.uid == chatDetails))
+      if((ind) >= 0) {
+        setFav(true)
+      }
+
     } catch (error) {
       return error;
     }
   };
 
   const handleFavourite = async () => {
+    console.log(fav);
+    
     try {
       const userRef = doc(db, "users", currentUser.uid);
-      fav
-        ? updateDoc(userRef, { favourites: arrayUnion(chatUser) })
-        : updateDoc(userRef, { favourites: arrayRemove(chatUser) });
+      if(fav){
+        updateDoc(userRef, { favourites: arrayUnion(chatUser.uid) })
+        addFavourite(chatUser)
+      } else{
+        updateDoc(userRef, { favourites: arrayRemove(chatUser.uid) });
+        removeFavourite(chatUser.uid)
+      }
+
+    
     } catch (error) {
       return error;
     }
   };
 
   useEffect(() => {
-    chatUser.uid && fetchDetails();
-  }, [chatUser.uid]);
+    chatDetails && fetchDetails();
+  }, [chatDetails]);
 
   useEffect(() => {
     const debounce = setTimeout(() => {
-      fav && handleFavourite();
+      chatDetails && handleFavourite();
     }, 2000);
-
     return () => clearTimeout(debounce);
   }, [fav]);
 
   return (
-    <section className="hidden min-[1100px]:block w-[300px] space-y-4 dark:bg-[#0d121b]">
+    <section className={`min-[1100px]:block space-y-4 dark:bg-[#0d121b] ${chatDetails ? 'flex-1 min-[1100px]:flex-none min-[1100px]:w-[320px]': 'w-0 overflow-hidden p-0'}`}>
       <div className="flex justify-end w-full py-2">
-        <button className="hover:text-green-400">
+        <button onClick={clearChatDetails} className="hover:text-green-400">
           <i className="fi fi-sr-cross-small" />
         </button>
       </div>
@@ -94,10 +106,10 @@ const DetailsSection = () => {
             {details.email || "Co-founder @ Coffee Country"}
           </p>
         </div>
-        <div className="flex items-center justify-center gap-2">
-          <i className="fi fi-sr-phone-flip rotate-90 p-4 border rounded-full hover:text-white hover:bg-green-400 cursor-pointer" />
-          <i className="fi fi-sr-beacon p-4 border rounded-full hover:text-white hover:bg-green-400 cursor-pointer" />
-          <i className="fi fi-sr-video-camera-alt p-4 border rounded-full hover:text-white hover:bg-green-400 cursor-pointer" />
+        <div className="flex items-center justify-center gap-4">
+          <i className="fi fi-sr-phone-flip rotate-90 p-4 border rounded-full hover:text-white hover:bg-green-400 hover:border-green-500 cursor-pointer" />
+          <i className="fi fi-sr-beacon p-4 border rounded-full hover:text-white hover:bg-green-400 hover:border-green-500 cursor-pointer" />
+          <i className="fi fi-sr-video-camera-alt p-4 border rounded-full hover:text-white hover:bg-green-400 hover:border-green-500 cursor-pointer" />
         </div>
       </div>
       <hr className="invisible" />
@@ -113,9 +125,9 @@ const DetailsSection = () => {
       <div id="options" className="space-y-2">
         <div className="py-4 flex items-center justify-between">
           <p className="text-slate-500 dark:text-white">Add to Favourites</p>
-          <button onClick={() => setFav(!fav)} className="">
-            <ToggleButton />
-          </button>
+          <label onClick={() => setFav(!fav)}>
+            <ToggleButton toggleChange={fav} setToggleChange={setFav}/>
+          </label>
           {/* <input type="checkbox" checked={favourite} name="addToFavourite" className="" id="addToFavourite" /> */}
         </div>
         <hr />

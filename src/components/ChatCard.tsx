@@ -8,10 +8,11 @@ const ChatCard = ({
   cName,
   avatar,
   cUid,
+  inactive
 }: {
   cName?: string;
   avatar?: string;
-  active?: boolean;
+  inactive?: boolean;
   cUid: string;
 }) => {
   const { chatUser, setChatUser } = useChatUser();
@@ -25,7 +26,7 @@ const ChatCard = ({
     <div
       onClick={handleChatUser}
       className={`flex px-4 py-2 items-center justify-start gap-4 cursor-pointer ${
-        chatUser?.uid == cUid
+        (!inactive && chatUser?.uid == cUid)
           ? "bg-green-400 text-white"
           : " hover:text-green-400"
       }`}

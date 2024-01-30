@@ -18,7 +18,7 @@ import Image from "next/image";
 
 const MsgSection = () => {
   const { currentUser } = useAuth();
-  const { chatUser, clearChatUser } = useChatUser();
+  const { chatUser, clearChatUser,chatDetails , setChatDetails } = useChatUser();
 
   const [msgs, setMsgs] = useState<messagesType>({
     id: "",
@@ -75,7 +75,7 @@ const MsgSection = () => {
           messages: [
             {
               sender: currentUser.uid,
-              avatar: currentUser.avatar,
+              // avatar: currentUser.avatar,
               text: msg,
               msgTime: Timestamp.now(),
             },
@@ -83,25 +83,31 @@ const MsgSection = () => {
         });
 
         await updateDoc(currentUserRef, {
-          contacts: arrayUnion({
-            uid: chatUser.uid,
-            username: chatUser.username,
-            avatar: chatUser.avatar,
-          }),
+          contacts: arrayUnion(
+            chatUser.uid
+            // {
+            // uid: chatUser.uid,
+            // username: chatUser.username,
+            // avatar: chatUser.avatar,
+          // }
+          ),
         });
 
         await updateDoc(chatUserRef, {
-          contacts: arrayUnion({
-            uid: currentUser.uid,
-            username: currentUser.username,
-            avatar: currentUser.avatar,
-          }),
+          contacts: arrayUnion(
+            currentUser.uid
+          //   {
+          //   uid: currentUser.uid,
+          //   // username: currentUser.username,
+          //   // avatar: currentUser.avatar,
+          // }
+          ),
         });
       } else {
         await updateDoc(chatRef, {
           messages: arrayUnion({
             sender: currentUser.uid,
-            avatar: currentUser.avatar,
+            // avatar: currentUser.avatar,
             text: msg,
             msgTime: Timestamp.now(),
           }),
@@ -122,7 +128,7 @@ const MsgSection = () => {
       ...msgs.messages,
       {
         sender: currentUser.uid,
-        avatar: currentUser.avatar,
+        // avatar: currentUser.avatar,
         text: msg,
         msgTime: Timestamp.now(),
       },
@@ -154,7 +160,9 @@ const MsgSection = () => {
   }, [msgs.id]);
 
   return (
-    <section className="relative flex-1 flex flex-col justify-between backdrop-blur-sm bg-[#f4f6f3] dark:bg-[#080b11] dark:border-r dark:border-white/10">
+    <section
+      className={`${chatDetails ? 'w-0 overflow-hidden p-0 dark:border-0' : 'flex-1 dark:border-r'} min-[1100px]:p-4 min-[1100px]:flex-1 relative flex flex-col justify-between max-w-[900px] backdrop-blur-sm bg-[#f4f6f3] dark:bg-[#080b11] sm:dark:border-r dark:border-white/10`}
+    >
       {/* <Image
         height={800}
         width={800}
@@ -168,6 +176,7 @@ const MsgSection = () => {
         className="w-full h-[65px] z-[2] flex items-center gap-4 top-0 left-0 absolute bg-black/20 dark:bg-[#0d121b]  backdrop-blur-sm px-4 dark:border-b dark:border-white/10"
       >
         <Image
+          onClick={() => setChatDetails(chatUser.uid)}
           height={100}
           width={100}
           className="w-[40px] h-[40px] rounded-full"
@@ -266,6 +275,7 @@ const MsgSection = () => {
               value={msg}
               onChange={handleChange}
               type="text"
+              autoComplete="false"
               className="w-full py-3 sm:py-4 outline-none bg-transparent"
               placeholder="Write a reply"
             />
@@ -278,8 +288,8 @@ const MsgSection = () => {
             onClick={handleMsg}
             className="flex items-center  gap-2 rounded-md p-4 bg-green-400 hover:bg-green-500 text-white"
           >
-            <i className="fi fi-sr-paper-plane" />
             <span className="hidden sm:block">Send</span>
+            <i className="fi fi-sr-paper-plane" />
           </button>
         </div>
       </div>

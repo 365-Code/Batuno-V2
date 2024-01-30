@@ -1,14 +1,22 @@
 "use client";
+import { useChatUser } from "@/context/ChatState";
 import { auth } from "@/utils/firebase";
-import { onAuthStateChanged, signOut } from "firebase/auth";
+import { signOut } from "firebase/auth";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import React, { useEffect } from "react";
+import { usePathname } from "next/navigation";
+import React from "react";
 
 const NavSection = () => {
   const pathname = usePathname();
-  const nav = useRouter()
+  const {chatUser, chatDetails, clearChatUser, clearChatDetails} = useChatUser()
+  const handleChat = () => {
+    
+    if( (chatDetails || chatUser.uid) && window.innerWidth <=  640 ){
+      clearChatDetails()
+      clearChatUser()
+    }
+  }
 
   return (
     <section className="min-w-fit p-0 shadow-sm shadow-black/20 gap-8 flex flex-col items-center justify-between dark:bg-[#0d121b] dark:border-r dark:border-white/10">
@@ -25,6 +33,7 @@ const NavSection = () => {
       <div id="nav" className="flex-1 flex flex-col gap-2 w-full">
         <Link
           href={"/"}
+          onClick={handleChat}
           className={`${pathname == "/" && "icon-selected"} nav-icon`}
         >
           <i className="fi fi-sr-comments p-4" />

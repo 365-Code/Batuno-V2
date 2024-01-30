@@ -1,21 +1,16 @@
 "use client"
-import { auth, db } from "@/utils/firebase";
-import { onAuthStateChanged } from "firebase/auth";
-import { createContext, useContext, useEffect, useState } from "react";
-import { useAuth } from "./AuthState";
-import { collection, doc, getDoc, getDocs, query, setDoc, where } from "firebase/firestore";
-import { push } from "firebase/database";
+import { createContext, useContext, useState } from "react";
+import { chatUserType } from "@/utils";
 
-type chatUserType = {
-    uid: string,
-    username: string,
-    avatar: string
-}
 
 export type ChatUserContextType = {
     chatUser: chatUserType;
+    // chatDetails: detailType,
+    chatDetails: string,
     setChatUser: any,
-    clearChatUser: any
+    clearChatUser: any,
+    clearChatDetails: any,
+    setChatDetails: any
 };
 
 const ChatUserContext = createContext<ChatUserContextType | null>(null)
@@ -27,14 +22,28 @@ export const ChatUserState = ({children}: {children: React.ReactNode})=>{
         uid: '',
         avatar: ''
     }
+
+    const initialChatDetail = {
+        username: '',
+        uid: '',
+        avatar: '',
+        email: ''
+    }
+
     const [chatUser, setChatUser] = useState<chatUserType>(initialChatUser)
+    // const [chatDetails, setChatDetails] = useState<detailType>(initialChatDetail)
+    const [chatDetails, setChatDetails] = useState('')
+
+    const clearChatDetails = () => {
+        setChatDetails('')
+    }
 
     const clearChatUser = ()=>{
         setChatUser(initialChatUser)
     }
 
     return (
-        <ChatUserContext.Provider value={{chatUser, setChatUser, clearChatUser}}>
+        <ChatUserContext.Provider value={{chatUser, chatDetails, setChatUser, setChatDetails, clearChatUser, clearChatDetails}}>
             {children}
         </ChatUserContext.Provider>
     )
