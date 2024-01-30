@@ -39,30 +39,26 @@ const DetailsSection = () => {
           email: chatDetails.email,
         });
       }
-      const ind = currentUser.favourites.findIndex((c) => (c.uid == chatDetails))
-      if((ind) >= 0) {
+      const ind = currentUser.favourites.findIndex((c) => (c == chatDetails))
+      if(ind != -1){
         setFav(true)
       }
-
     } catch (error) {
       return error;
     }
   };
 
   const handleFavourite = async () => {
-    console.log(fav);
-    
     try {
       const userRef = doc(db, "users", currentUser.uid);
       if(fav){
         updateDoc(userRef, { favourites: arrayUnion(chatUser.uid) })
-        addFavourite(chatUser)
+        addFavourite(chatUser.uid)
+        
       } else{
         updateDoc(userRef, { favourites: arrayRemove(chatUser.uid) });
         removeFavourite(chatUser.uid)
       }
-
-    
     } catch (error) {
       return error;
     }
@@ -125,9 +121,7 @@ const DetailsSection = () => {
       <div id="options" className="space-y-2">
         <div className="py-4 flex items-center justify-between">
           <p className="text-slate-500 dark:text-white">Add to Favourites</p>
-          <label onClick={() => setFav(!fav)}>
             <ToggleButton toggleChange={fav} setToggleChange={setFav}/>
-          </label>
           {/* <input type="checkbox" checked={favourite} name="addToFavourite" className="" id="addToFavourite" /> */}
         </div>
         <hr />

@@ -13,6 +13,10 @@ body{
   @apply w-screen overflow-x-hidden dark:text-white dark:bg-[#151b28] scroll-smooth text-slate-600 selection:bg-green-300 selection:text-white transition-all;
 }
 
+input{
+  @apply dark:bg-transparent
+}
+
 img{
   @apply w-full h-full object-center object-cover;
 }

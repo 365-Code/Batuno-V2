@@ -47,8 +47,8 @@ const NavSection = () => {
           <i className="fi fi-sr-archive p-4" />
         </Link>
         <Link
-          href={"/settings"}
-          className={`${pathname == "/settings" && "icon-selected"} nav-icon`}
+          href={"/profile"}
+          className={`${pathname == "/profile" && "icon-selected"} nav-icon`}
         >
           <i className="fi fi-sr-settings-sliders p-4" />
         </Link>

@@ -18,7 +18,7 @@ export type messagesType = {
     avatar: string,
     logged: boolean,
     phone?: number,
-    favourites: Array<any>
+    favourites: Array<string>
 }
 
 export type chatUserType = {

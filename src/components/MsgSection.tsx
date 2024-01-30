@@ -75,7 +75,6 @@ const MsgSection = () => {
           messages: [
             {
               sender: currentUser.uid,
-              // avatar: currentUser.avatar,
               text: msg,
               msgTime: Timestamp.now(),
             },
@@ -85,22 +84,12 @@ const MsgSection = () => {
         await updateDoc(currentUserRef, {
           contacts: arrayUnion(
             chatUser.uid
-            // {
-            // uid: chatUser.uid,
-            // username: chatUser.username,
-            // avatar: chatUser.avatar,
-          // }
           ),
         });
 
         await updateDoc(chatUserRef, {
           contacts: arrayUnion(
             currentUser.uid
-          //   {
-          //   uid: currentUser.uid,
-          //   // username: currentUser.username,
-          //   // avatar: currentUser.avatar,
-          // }
           ),
         });
       } else {
@@ -128,7 +117,6 @@ const MsgSection = () => {
       ...msgs.messages,
       {
         sender: currentUser.uid,
-        // avatar: currentUser.avatar,
         text: msg,
         msgTime: Timestamp.now(),
       },

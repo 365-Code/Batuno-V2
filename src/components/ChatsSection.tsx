@@ -16,7 +16,7 @@ import { useChatUser } from "@/context/ChatState";
 
 const ChatsSection = () => {
   const [chatUsers, setChatUsers] = useState([] as Array<any>);
-  const [allChats, setAllChats] = useState([] as Array<any>);
+  const [allChats, setAllChats] = useState([] as Array<chatUserType>);
   const [favChats, setFavChats] = useState([] as Array<chatUserType>);
   const [currentChat, setCurrentChat] = useState([] as Array<any>);
   const [allGroups, setAllGroups] = useState([] as Array<any>);
@@ -57,7 +57,7 @@ const ChatsSection = () => {
           if(query.exists()){
             conts.push(query.data() as chatUserType)
           }
-          setAllChats([...allChats, ...conts]);
+          setAllChats(conts);
         });
 
         let favs = [] as Array<chatUserType>
@@ -67,9 +67,9 @@ const ChatsSection = () => {
           if(query.exists()){
             favs.push(query.data() as chatUserType)
           }
-          setFavChats([...favChats, ...favs])
+          setFavChats(favs)
+          // setFavChats([...favChats, ...favs])
         });
-
       }
     } catch (error) {
       return error;
@@ -95,7 +95,7 @@ const ChatsSection = () => {
   };
 
   useEffect(() => {
-    currentUser.uid && getMyChats();
+    currentUser && getMyChats();
   }, [currentUser]);
 
   useEffect(() => {
