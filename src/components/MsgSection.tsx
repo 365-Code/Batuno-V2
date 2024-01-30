@@ -275,7 +275,7 @@ const MsgSection = () => {
               value={msg}
               onChange={handleChange}
               type="text"
-              autoComplete="false"
+              autoComplete="off"
               className="w-full py-3 sm:py-4 outline-none bg-transparent"
               placeholder="Write a reply"
             />

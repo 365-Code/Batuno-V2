@@ -57,8 +57,8 @@ const ChatsSection = () => {
           if(query.exists()){
             conts.push(query.data() as chatUserType)
           }
+          setAllChats([...allChats, ...conts]);
         });
-        setAllChats(conts);
 
         let favs = [] as Array<chatUserType>
         favourites.forEach( async (element: string) => {
@@ -67,8 +67,8 @@ const ChatsSection = () => {
           if(query.exists()){
             favs.push(query.data() as chatUserType)
           }
+          setFavChats([...favChats, ...favs])
         });
-        setFavChats(favs)
 
       }
     } catch (error) {
