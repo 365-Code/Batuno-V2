@@ -13,6 +13,7 @@ import {
 import { db } from "@/utils/firebase";
 import { useAuth } from "@/context/AuthState";
 import { useChatUser } from "@/context/ChatState";
+import { onAuthStateChanged } from "firebase/auth";
 
 const ChatsSection = () => {
   const [chatUsers, setChatUsers] = useState([] as Array<any>);
@@ -95,12 +96,12 @@ const ChatsSection = () => {
   };
 
   useEffect(() => {
-    currentUser && getMyChats();
+    currentUser.uid && getMyChats();
   }, [currentUser]);
 
   useEffect(() => {
     searchInput ? searchChat() : setSearchChats([]);
-  }, [searchInput]);
+}, [searchInput]);
   
   return (
     <section

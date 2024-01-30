@@ -3,6 +3,7 @@ import { UserType, chatUserType } from "@/utils";
 import { auth, db } from "@/utils/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
+import { useRouter } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react";
 
 export type AuthContextType = {
@@ -14,6 +15,8 @@ export type AuthContextType = {
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthState = ({ children }: { children: React.ReactNode }) => {
+    const nav = useRouter()
+
   useEffect(() => {
     onAuthStateChanged(auth, async (user) => {
       if (user) {
@@ -39,6 +42,7 @@ export const AuthState = ({ children }: { children: React.ReactNode }) => {
           logged: false,
           favourites: [],
         });
+        nav.push('/auth/login')
       }
     });
   }, [auth]);
