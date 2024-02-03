@@ -97,7 +97,7 @@ const Page = () => {
 
   return (
     <main className="h-screen flex items-center justify-center md:p-4">
-      <div className="max-w-full w-[900px] h-full flex shadow-sm shadow-black/50">
+      <div className="max-w-full w-[900px] h-full flex shadow-sm shadow-black/50 dark:bg-[#0d121b] dark:border-white/10">
         <NavSection />
         <div className="w-full sm:p-4">
           <h1 className="text-3xl p-4">Profile</h1>

@@ -1,9 +1,15 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, {
+  ChangeEvent,
+  HtmlHTMLAttributes,
+  useEffect,
+  useState,
+} from "react";
 import Msg from "./Msg";
-import { messageType, messagesType } from "@/utils";
+import { fileType, messageType, messagesType } from "@/utils";
 import { useAuth } from "@/context/AuthState";
 import { useChatUser } from "@/context/ChatState";
+import EmojiPicker, { EmojiClickData, Theme } from "emoji-picker-react";
 import {
   Timestamp,
   arrayUnion,
@@ -13,12 +19,17 @@ import {
   setDoc,
   updateDoc,
 } from "firebase/firestore";
-import { db } from "@/utils/firebase";
+import { db, storage } from "@/utils/firebase";
 import Image from "next/image";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import FileSkeleton from "./FileSkeleton";
+import FileCard from "./FileCard";
+import FileTypeCard from "./FileTypeCard";
 
 const MsgSection = () => {
   const { currentUser } = useAuth();
-  const { chatUser, clearChatUser,chatDetails , setChatDetails } = useChatUser();
+  const { chatUser, clearChatUser, chatDetails, setChatDetails } =
+    useChatUser();
 
   const [msgs, setMsgs] = useState<messagesType>({
     id: "",
@@ -26,8 +37,10 @@ const MsgSection = () => {
     isGroup: false,
     messages: [] as Array<messageType>,
   });
-
   const [msg, setMsg] = useState("");
+  const [showEmoji, setShowEmoji] = useState(false);
+  const [sendFiles, setSendFiles] = useState([] as Array<fileType>);
+  const [showFiles, setShowFiles] = useState<Array<any>>()
 
   const fetchMessages = async () => {
     const combineId =
@@ -75,6 +88,7 @@ const MsgSection = () => {
           messages: [
             {
               sender: currentUser.uid,
+              files: sendFiles,
               text: msg,
               msgTime: Timestamp.now(),
             },
@@ -82,21 +96,18 @@ const MsgSection = () => {
         });
 
         await updateDoc(currentUserRef, {
-          contacts: arrayUnion(
-            chatUser.uid
-          ),
+          contacts: arrayUnion(chatUser.uid),
         });
 
         await updateDoc(chatUserRef, {
-          contacts: arrayUnion(
-            currentUser.uid
-          ),
+          contacts: arrayUnion(currentUser.uid),
         });
       } else {
         await updateDoc(chatRef, {
           messages: arrayUnion({
             sender: currentUser.uid,
             // avatar: currentUser.avatar,
+            files: sendFiles,
             text: msg,
             msgTime: Timestamp.now(),
           }),
@@ -107,16 +118,52 @@ const MsgSection = () => {
     }
   };
 
-  const handleChange = (e: any) => {
+  const uploadFile = (file: File) => {
+    if (!file) return;
+    const fileRef = ref(storage, `${currentUser.uid}/${crypto.randomUUID()+"-"+ file.name}`);
+    const uploadTask = uploadBytesResumable(fileRef, file);
+    uploadTask.on(
+      "state_changed",
+      (snapshot: any) => {},
+      (error: any) => {
+        console.log(error);
+      },
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          setSendFiles((preVal) => ([...preVal, {name: file.name, type: file.type, url: downloadURL}]))
+        });
+      }
+    );
+
+    return true;
+  };
+
+  const handleUploadFile = (e: ChangeEvent<HTMLInputElement>) => {
+    if(e.target.files){
+      const files = e.target.files
+      const showfiles = []
+      for(var i=0; i< files.length; i++){
+        showfiles.push(files[i]);
+      }
+      setShowFiles(showfiles)
+    }
+  }
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setMsg(value);
   };
 
   const handleMsg = () => {
+    showFiles?.forEach((file) => {
+      uploadFile(file)
+    })
+
     const newMsgs = [
       ...msgs.messages,
       {
         sender: currentUser.uid,
+        files: sendFiles,
         text: msg,
         msgTime: Timestamp.now(),
       },
@@ -124,7 +171,20 @@ const MsgSection = () => {
     setMsgs((preVal: any) => ({ ...preVal, messages: newMsgs }));
     sendMsg();
     setMsg("");
+    setShowEmoji(false);
+    setShowFiles([])
+    setSendFiles([])
   };
+
+  const handleEmoji = (e: EmojiClickData) => {
+    setMsg((preVal) => preVal + e.emoji);
+  };
+
+  const removeFile = (file: File)=>{
+    setShowFiles( (preVal) => (preVal?.filter((f) => f != file)) )
+  }
+
+  const hideEmoji = () => setShowEmoji(false);
 
   useEffect(() => {
     chatUser.uid && fetchMessages();
@@ -135,6 +195,7 @@ const MsgSection = () => {
       onSnapshot(doc(db, "chats", msgs.id), (doc) => {
         if (doc.exists()) {
           const messages = doc.data().messages as Array<messageType>;
+          console.log(messages);
           setMsgs((preVal) => ({ ...preVal, messages }));
         }
       });
@@ -149,7 +210,11 @@ const MsgSection = () => {
 
   return (
     <section
-      className={`${chatDetails ? 'w-0 overflow-hidden p-0 dark:border-0' : 'flex-1 dark:border-r'} min-[1100px]:p-4 min-[1100px]:flex-1 relative flex flex-col justify-between max-w-[900px] backdrop-blur-sm bg-[#f4f6f3] dark:bg-[#080b11] sm:dark:border-r dark:border-white/10`}
+      className={`${
+        chatDetails
+          ? "w-0 overflow-hidden p-0 dark:border-0"
+          : "flex-1 dark:border-r"
+      } min-[1100px]:p-4 min-[1100px]:flex-1 relative flex flex-col justify-between max-w-[900px] backdrop-blur-sm bg-[#f4f6f3] dark:bg-[#080b11] sm:dark:border-r dark:border-white/10`}
     >
       {/* <Image
         height={800}
@@ -167,11 +232,16 @@ const MsgSection = () => {
           onClick={() => setChatDetails(chatUser.uid)}
           height={100}
           width={100}
-          className="w-[40px] h-[40px] rounded-full"
+          className="w-[40px] h-[40px] rounded-full cursor-pointer"
           src={chatUser.avatar}
           alt=""
         />
-        <h3 className="text-2xl py-4">{msgs.name || "Group Name"}</h3>
+        <h3
+          onClick={() => setChatDetails(chatUser.uid)}
+          className="cursor-pointer hover:text-green-400 text-2xl py-4"
+        >
+          {msgs.name || "Group Name"}
+        </h3>
 
         {msgs.isGroup && (
           <div className="flex items-center gap-2">
@@ -215,35 +285,75 @@ const MsgSection = () => {
       </div>
 
       <div
+        onClick={hideEmoji}
         id="chat-messages"
-        className="h-[90%] pt-16 overflow-y-scroll no-scrollbar"
+        className="h-[90%] flex-1 pt-16 overflow-y-scroll no-scrollbar"
       >
         {msgs.messages.map((msg: any, i) =>
-          msg.sender == currentUser.uid ? (
-            <Msg
-              key={i}
+          msg.sender == currentUser.uid  ? (
+            <div key={i}>
+                <div className="flex flex-col items-end gap-2 mt-2">
+                  {
+                    msg.files?.map((file: fileType, i: any) =>
+
+                    <FileTypeCard key={i} file={file}/>
+                    )
+                  }
+                </div>
+            {
+              msg.text != "" && <Msg
               msgTime={msg.msgTime}
               avatar={currentUser.avatar}
               msg={msg.text}
               fromSelf={true}
             />
+            }
+            </div>
           ) : (
-            <Msg
+            <div key={i}>
+                <div className="flex flex-col items-start gap-2 mt-2">
+                  {
+                    msg.files?.map((file: fileType, i: any) =>
+
+                    <FileTypeCard key={i} file={file}/>
+                    )
+                  }
+                </div>
+            {
+              msg.text != "" && 
+              <Msg
               key={i}
               msgTime={msg.msgTime}
               avatar={chatUser.avatar}
               msg={msg.text}
               fromSelf={false}
             />
+            }
+            </div>
           )
         )}
       </div>
 
       <div
         id="send"
-        className="flex gap-1 md:gap-4 items-center justify-between max-w-full"
+        className="mb-1 py-2 flex gap-2 md:gap-4 overflow-x-scroll no-scrollbar items-center max-w-full"
       >
-        <div className="hidden md:block w-[40px] h-[40px] rounded-full overflow-hidden">
+        {
+          showFiles?.map((file: File, i) => 
+            <div key={i} className="p-2 bg-white/20 backdrop-blur-sm rounded-lg flex items-start gap-1 relative">
+              <FileSkeleton fileType={file.type}/>
+              <span className="whitespace-nowrap">{file.name.slice(0, 12)}...</span>
+              <i onClick={() => removeFile(file)} className="fi fi-sr-cross-circle absolute left-0 top-0 hover:text-slate-500 cursor-pointer" />
+            </div>
+          )
+        }
+      </div>
+
+      <div
+        id="send"
+        className="h-[50px] flex gap-1 md:gap-4 items-center justify-between max-w-full"
+      >
+        <div className="max-h-full hidden md:block w-[40px] h-[40px] rounded-full overflow-hidden">
           <Image
             height={100}
             width={100}
@@ -255,11 +365,11 @@ const MsgSection = () => {
             className="res-img"
           />
         </div>
-
-        <div className="flex items-center gap-2 w-full h-[50px]">
-          <div className="bg-white dark:bg-[#0d121b] focus-within:ring-green-500 focus-within:ring-1 rounded-md flex-1 flex items-center px-4 gap-4">
+        <div className="max-h-full flex items-center gap-2 w-full h-[50px]">
+          <div className="max-h-full relative bg-white dark:bg-[#0d121b] focus-within:ring-green-500 focus-within:ring-1 rounded-md flex-1 flex items-center px-4 gap-4">
             <input
               name="msg"
+              onFocus={hideEmoji}
               value={msg}
               onChange={handleChange}
               type="text"
@@ -268,13 +378,42 @@ const MsgSection = () => {
               placeholder="Write a reply"
             />
             <div className="flex gap-4 items-center">
-              <i className="fi fi-sr-clip hover:text-green-500 cursor-pointer text-xl" />
-              <i className="fi fi-sr-smile-plus hover:text-green-500 cursor-pointer text-xl" />
+              <label htmlFor="sendFiles">
+                <i className="fi fi-sr-clip hover:text-green-500 cursor-pointer text-xl" />
+              </label>
+              <input
+                // onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                //   setSendFiles(e.target.files ? e.target.files : "")
+                // }
+                // onChange={(e: ChangeEvent<HTMLInputElement>) => e.target.files && uploadFile(e.target.files[0])}
+                onChange={handleUploadFile}
+                multiple
+                id="sendFiles"
+                type="file"
+                className="hidden"
+              />
+              <div className="absolute bottom-[115%] right-0">
+                <EmojiPicker
+                  onEmojiClick={handleEmoji}
+                  onReactionClick={handleEmoji}
+                  open={showEmoji}
+                  height={350}
+                  reactionsDefaultOpen={true}
+                  theme={Theme.AUTO}
+                  className="no-scrollbar"
+                />
+              </div>
+              <i
+                onClick={() => setShowEmoji(!showEmoji)}
+                className={`fi fi-sr-smile-plus hover:text-green-500 ${
+                  showEmoji && "text-green-500"
+                } cursor-pointer text-xl`}
+              />
             </div>
           </div>
           <button
             onClick={handleMsg}
-            className="flex items-center  gap-2 rounded-md p-4 bg-green-400 hover:bg-green-500 text-white"
+            className="max-h-full flex items-center  gap-2 rounded-md p-4 bg-green-400 hover:bg-green-500 text-white"
           >
             <span className="hidden sm:block">Send</span>
             <i className="fi fi-sr-paper-plane" />

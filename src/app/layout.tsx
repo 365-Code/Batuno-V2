@@ -26,7 +26,7 @@ export default function RootLayout({
     <AuthState>
       <ChatUserState>
         <html lang="en">
-          <body className={karla.className}>
+          <body id="body" className={karla.className}>
             {children}
             <ToastContainer
               position="top-center"

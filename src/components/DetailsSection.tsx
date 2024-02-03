@@ -64,6 +64,10 @@ const DetailsSection = () => {
     }
   };
 
+  const handleDeleteContact = async ()=>{
+    
+  }
+
   useEffect(() => {
     chatDetails && fetchDetails();
   }, [chatDetails]);
@@ -125,7 +129,7 @@ const DetailsSection = () => {
           {/* <input type="checkbox" checked={favourite} name="addToFavourite" className="" id="addToFavourite" /> */}
         </div>
         <hr />
-        <button className="py-4 text-slate-500 dark:text-white hover:text-red-400">
+        <button onClick={handleDeleteContact} className="py-4 text-slate-500 dark:text-white hover:text-red-400">
           Delete this Contact
         </button>
         <hr />

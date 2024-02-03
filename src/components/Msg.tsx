@@ -42,7 +42,7 @@ const Msg = ({msg, fromSelf, avatar, msgTime}: {msg: string, fromSelf: boolean, 
 
   return (
     <div ref={scrollRef} className={`py-1 gap-1 flex flex-col ${fromSelf? 'items-end' : 'items-start'}`}> {/*dark:bg-green-400*/}
-        <p className={`rounded-md p-4 w-fit max-w-full sm:max-w-[400px] ${fromSelf ? 'bg-green-400/30 dark:bg-green-400 backdrop-blur-sm' : 'bg-white dark:bg-[#0d121b]'} `}>
+        <p className={`rounded-md p-4 w-fit sm:max-w-[400px] max-w-[93%] ${fromSelf ? 'bg-green-400/30 dark:bg-green-400 backdrop-blur-sm' : 'bg-white dark:bg-[#0d121b]'} `}>
             {msg}
         </p>
         <p className={`${fromSelf ? 'flex-row text-right' : 'flex-row-reverse text-left'} flex items-start gap-2 text-xs`}>

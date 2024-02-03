@@ -55,6 +55,10 @@ input::-webkit-inner-spin-button {
   @apply text-green-500 border-l-4 border-green-500;
 }
 
+.file-icon{
+  @apply text-2xl text-slate-500;
+}
+
 /* .icon-selected{
   @apply bg-[#464646] text-[#f8f8f8] ;
 } */

@@ -1,7 +1,8 @@
 export type messageType = {
     avatar: string,
     sender: string,
-    text: string
+    text: string,
+    files: Array<fileType>
   }
 
 export type messagesType = {
@@ -33,6 +34,12 @@ export type detailType = {
     avatar: string,
     email: string,
     fav?: boolean
+}
+
+export type fileType = {
+    name: string,
+    type: string,
+    url: string,
 }
 
 
