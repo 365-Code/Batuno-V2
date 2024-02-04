@@ -1,7 +1,7 @@
 "use client";
 import React, { ChangeEvent, useEffect, useState } from "react";
 import ChatCard from "./ChatCard";
-import { avatars, chatUserType, chats, users } from "@/utils";
+import { avatars, chatUserType, chats, groupType, users } from "@/utils";
 import {
   collection,
   doc,
@@ -16,10 +16,8 @@ import { useChatUser } from "@/context/ChatState";
 import { onAuthStateChanged } from "firebase/auth";
 
 const ChatsSection = () => {
-  const [chatUsers, setChatUsers] = useState([] as Array<any>);
   const [allChats, setAllChats] = useState([] as Array<chatUserType>);
   const [favChats, setFavChats] = useState([] as Array<chatUserType>);
-  const [currentChat, setCurrentChat] = useState([] as Array<any>);
   const [allGroups, setAllGroups] = useState([] as Array<any>);
   const [searchInput, setSearchInput] = useState("");
   const [searchChats, setSearchChats] = useState([] as Array<any>);
@@ -49,9 +47,8 @@ const ChatsSection = () => {
       const result = await getDoc(userRef);
 
       if (result.exists()) {
-        const { contacts, favourites } = result.data();
+        const { contacts, favourites, groups } = result.data();
         let conts = [] as Array<chatUserType>
-        
         contacts.forEach( async (element: string) => {
           const queryRef = doc(db, 'users', element)
           const query = await getDoc(queryRef)
@@ -69,6 +66,17 @@ const ChatsSection = () => {
             favs.push(query.data() as chatUserType)
           }
           setFavChats(favs)
+          // setFavChats([...favChats, ...favs])
+        });
+        
+        let grps = [] as Array<groupType>
+        groups.forEach( async (element: string) => {
+          const queryRef = doc(db, 'groups', element)
+          const query = await getDoc(queryRef)
+          if(query.exists()){
+            grps.push({id: element, ...query.data()} as groupType)
+          }
+          setAllGroups(grps)
           // setFavChats([...favChats, ...favs])
         });
       }
@@ -102,6 +110,8 @@ const ChatsSection = () => {
   useEffect(() => {
     searchInput ? searchChat() : setSearchChats([]);
 }, [searchInput]);
+
+
   
   return (
     <section
@@ -162,10 +172,10 @@ const ChatsSection = () => {
           </div>
       }
 
-      <div id="all-chats" className="h-auto">
+      <div id="all-chats" className="max-h-full h-fit">
         <h3 className="text-slate-500 dark:text-white py-1 px-4">All Chats</h3>
         {!allChats.length && <p className="py-2 px-4">No Contacts Yet</p> }
-        <div className="h-[240px] overflow-y-scroll custom-scrollbar">
+        <div className="max-h-[240px] overflow-y-scroll custom-scrollbar">
           {allChats?.map((u, i) => (
             <ChatCard
               key={u.uid}
@@ -178,22 +188,24 @@ const ChatsSection = () => {
       </div>
 
       {allGroups.length > 0 && (
-        <div id="group" className="h-full">
-          <h3 className="text-slate-500 py-1 px-4 flex gap-2">
+        <div id="group" className="">
+          <h3 className="text-slate-500 dark:text-white py-1 px-4 flex gap-2">
             <span>Groups</span>
-            <button className="hover:text-slate-900">
+            {/* <button className="hover:text-slate-900 dark:text-slate-100">
               <i className="fi fi-sr-plus-hexagon text-xl" />
-            </button>
+            </button> */}
           </h3>
           <div className="max-h-[140px] overflow-y-scroll custom-scrollbar">
             {allGroups.map((g, i) => (
-              <ChatCard key={i} cName={g} cUid={g.id} />
+              <ChatCard key={g.id} cName={g.name} avatar={g.avatar} cUid={g.id} />
             ))}
             {/* <ChatCard cName='Coffee Nerds' active={true}/>
             <ChatCard cName='App Chemistry' active={false}/> */}
           </div>
         </div>
       )}
+
+
     </section>
   );
 };

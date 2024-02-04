@@ -28,6 +28,12 @@ export type chatUserType = {
     avatar: string
 }
 
+export type groupType = {
+    id: string,
+    name: string,
+    avatar: string
+}
+
 export type detailType = {
     uid: string,
     username: string,

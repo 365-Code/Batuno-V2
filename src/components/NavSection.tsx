@@ -9,14 +9,14 @@ import React from "react";
 
 const NavSection = () => {
   const pathname = usePathname();
-  const {chatUser, chatDetails, clearChatUser, clearChatDetails} = useChatUser()
+  const { chatUser, chatDetails, clearChatUser, clearChatDetails } =
+    useChatUser();
   const handleChat = () => {
-    
-    if( (chatDetails || chatUser.uid) && window.innerWidth <=  640 ){
-      clearChatDetails()
-      clearChatUser()
+    if ((chatDetails || chatUser.uid) && window.innerWidth <= 640) {
+      clearChatDetails();
+      clearChatUser();
     }
-  }
+  };
 
   return (
     <section className="min-w-fit p-0 shadow-sm shadow-black/20 gap-8 flex flex-col items-center justify-between dark:bg-[#0d121b] dark:border-r dark:border-white/10">
@@ -39,8 +39,13 @@ const NavSection = () => {
           <i className="fi fi-sr-comments p-4" />
         </Link>
 
-        <Link href={"/"} className="nav-icon">
+        {/* <Link href={"/"} className="nav-icon">
           <i className="fi fi-sr-book-bookmark p-4" />
+        </Link> */}
+        <Link href={"/groups"} 
+          className={`${pathname == "/groups" && "icon-selected"} nav-icon`}
+        >
+          <i className="fi fi-sr-users p-4" />
         </Link>
 
         <Link href={"/"} className="nav-icon">
