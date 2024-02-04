@@ -9,6 +9,7 @@ import Msg from "./Msg";
 import { fileType, messageType, messagesType } from "@/utils";
 import { useAuth } from "@/context/AuthState";
 import { useChatUser } from "@/context/ChatState";
+import Modal from "./Modal";
 import EmojiPicker, { EmojiClickData, Theme } from "emoji-picker-react";
 import {
   Timestamp,
@@ -25,6 +26,7 @@ import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import FileSkeleton from "./FileSkeleton";
 import FileCard from "./FileCard";
 import FileTypeCard from "./FileTypeCard";
+import Link from "next/link";
 
 const MsgSection = () => {
   const { currentUser } = useAuth();
@@ -41,6 +43,16 @@ const MsgSection = () => {
   const [showEmoji, setShowEmoji] = useState(false);
   const [sendFiles, setSendFiles] = useState([] as Array<fileType>);
   const [showFiles, setShowFiles] = useState<Array<any>>()
+  const [selectZoom, setSelectZoom] = useState({
+    id: -1,
+    file: {} as fileType
+  })
+
+
+
+  const handleSelectedZoom = (id: number, file : fileType) =>{
+    setSelectZoom({id, file})
+  }
 
   const fetchMessages = async () => {
     const combineId =
@@ -130,6 +142,7 @@ const MsgSection = () => {
       },
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          // console.log(downloadURL);
           setSendFiles((preVal) => ([...preVal, {name: file.name, type: file.type, url: downloadURL}]))
         });
       }
@@ -158,7 +171,6 @@ const MsgSection = () => {
     showFiles?.forEach((file) => {
       uploadFile(file)
     })
-
     const newMsgs = [
       ...msgs.messages,
       {
@@ -170,11 +182,15 @@ const MsgSection = () => {
     ];
     setMsgs((preVal: any) => ({ ...preVal, messages: newMsgs }));
     sendMsg();
+    handleReset()
+  };
+
+  const handleReset = () => {
     setMsg("");
     setShowEmoji(false);
     setShowFiles([])
     setSendFiles([])
-  };
+  }
 
   const handleEmoji = (e: EmojiClickData) => {
     setMsg((preVal) => preVal + e.emoji);
@@ -190,12 +206,24 @@ const MsgSection = () => {
     chatUser.uid && fetchMessages();
   }, [chatUser]);
 
+  const customStyles = {
+    content: {
+      top: '50%',
+      left: '50%',
+      right: 'auto',
+      bottom: 'auto',
+      marginRight: '-50%',
+      transform: 'translate(-50%, -50%)',
+    },
+  };
+  
+  
+
   const unsub = async () => {
     try {
       onSnapshot(doc(db, "chats", msgs.id), (doc) => {
         if (doc.exists()) {
           const messages = doc.data().messages as Array<messageType>;
-          console.log(messages);
           setMsgs((preVal) => ({ ...preVal, messages }));
         }
       });
@@ -209,6 +237,7 @@ const MsgSection = () => {
   }, [msgs.id]);
 
   return (
+    <>
     <section
       className={`${
         chatDetails
@@ -216,14 +245,6 @@ const MsgSection = () => {
           : "flex-1 dark:border-r"
       } min-[1100px]:p-4 min-[1100px]:flex-1 relative flex flex-col justify-between max-w-[900px] backdrop-blur-sm bg-[#f4f6f3] dark:bg-[#080b11] sm:dark:border-r dark:border-white/10`}
     >
-      {/* <Image
-        height={800}
-        width={800}
-        className="h-full w-full object-cover absolute top-0 left-0 -z-[1] opacity-25 dark:opacity-10"
-        // src="/bg.svg"
-        src={'https://img.freepik.com/free-vector/abstract-background-with-squares_23-2148995948.jpg?w=1060&t=st=1706539130~exp=1706539730~hmac=8e3965061f49a7402fd4a92176a566ba1fd82830b4005cc234ac13a07da37054'}
-        alt=""
-      /> */}
       <div
         id="heading"
         className="w-full h-[65px] z-[2] flex items-center gap-4 top-0 left-0 absolute bg-black/20 dark:bg-[#0d121b]  backdrop-blur-sm px-4 dark:border-b dark:border-white/10"
@@ -295,8 +316,25 @@ const MsgSection = () => {
                 <div className="flex flex-col items-end gap-2 mt-2">
                   {
                     msg.files?.map((file: fileType, i: any) =>
+                    (
+                      file.type.includes('text') 
+                      ?
+                      <FileTypeCard key={i} file={file}/>
+                      :
+                      <div key={i} className="relative">
+                      <object
+                      onClick={()=>handleSelectedZoom(i, file)}
+                      // key={i}
+                      className={`cursor-zoom-in max-w-full w-[400px] max-h-[400px] object-contain`}
+                      type={file.type}
+                      data={file.url}
+                      />
+                      <Link href={file.url} download={file.name}>
+                        <i className="absolute bottom-4 right-4 fi fi-sr-download text-lg hover:text-green-400" />
+                      </Link>
 
-                    <FileTypeCard key={i} file={file}/>
+                      </div>
+                    )
                     )
                   }
                 </div>
@@ -312,10 +350,21 @@ const MsgSection = () => {
           ) : (
             <div key={i}>
                 <div className="flex flex-col items-start gap-2 mt-2">
-                  {
+                {
                     msg.files?.map((file: fileType, i: any) =>
-
-                    <FileTypeCard key={i} file={file}/>
+                    (
+                      file.type.includes('text') 
+                      ?
+                      <FileTypeCard key={i} file={file}/>
+                      :
+                      <object
+                      onClick={()=>handleSelectedZoom(i, file)}
+                      key={i}
+                      className={`cursor-zoom-in max-w-full w-[400px] max-h-[400px] object-contain`}
+                      type={file.type}
+                      data={file.url}
+                      />
+                    )
                     )
                   }
                 </div>
@@ -387,6 +436,7 @@ const MsgSection = () => {
                 // }
                 // onChange={(e: ChangeEvent<HTMLInputElement>) => e.target.files && uploadFile(e.target.files[0])}
                 onChange={handleUploadFile}
+                value={''}
                 multiple
                 id="sendFiles"
                 type="file"
@@ -420,7 +470,19 @@ const MsgSection = () => {
           </button>
         </div>
       </div>
+
     </section>
+      <Modal showModal={selectZoom.id == -1 ? false : true} compo={
+        <object
+        onClick={()=>handleSelectedZoom(-1, {} as fileType)}
+        className={`cursor-zoom-out object-contain w-full h-full no-scrollbar`}
+        type={selectZoom.file.type}
+        width={'screen'}
+        data={selectZoom.file.url}
+        />
+      }/>
+    </>
+
   );
 };
 

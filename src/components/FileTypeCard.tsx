@@ -15,7 +15,7 @@ const FileTypeCard = ({file}: {file?: any}) => {
         <FileSkeleton fileType={file.type}/>
         <p className=''>{file?.name || "Kierra McAdam"}</p>
     </div>
-    <Link href={file?.url}>
+    <Link target='_blank' href={file?.url}>
     <i className="fi fi-sr-download text-lg hover:text-green-400" />
     </Link>
     </div>

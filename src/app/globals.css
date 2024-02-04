@@ -63,7 +63,6 @@ input::-webkit-inner-spin-button {
   @apply bg-[#464646] text-[#f8f8f8] ;
 } */
 
-
 .custom-scrollbar::-webkit-scrollbar{
   width: 2px;
   height: 2px;
