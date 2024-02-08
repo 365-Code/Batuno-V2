@@ -16,10 +16,6 @@ const Home = () => {
   const {currentUser} = useAuth()
   const {chatUser} = useChatUser()
 
-  useEffect(() => {
-    !currentUser.logged && nav.push('/auth/login')
-  }, [currentUser])
-
   return (
     <main className="h-screen flex items-center justify-center md:p-4">
       <div className="max-w-full w-full h-full flex md:justify-center">

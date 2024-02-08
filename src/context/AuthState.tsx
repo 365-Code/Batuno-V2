@@ -23,13 +23,6 @@ export const AuthState = ({ children }: { children: React.ReactNode }) => {
         try {
           const result = await getDoc(doc(db, "users", user.uid));
           setCurrentUser({ ...result.data(), logged: true } as UserType);
-          // setCurrentUser({
-          //     username: user.displayName || "",
-          //     uid: user.uid || "",
-          //     email: user.email || "",
-          //     avatar: user.photoURL || "",
-          //     logged: true
-          // })
         } catch (error) {
           return error;
         }

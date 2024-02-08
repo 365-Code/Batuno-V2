@@ -2,7 +2,7 @@
 import { useAuth } from '@/context/AuthState'
 import { auth, db } from '@/utils/firebase'
 import { log } from 'console'
-import { signInWithEmailAndPassword } from 'firebase/auth'
+import { onAuthStateChanged, signInWithEmailAndPassword } from 'firebase/auth'
 import { collection, doc, getDoc, getDocs } from 'firebase/firestore'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -14,14 +14,19 @@ const Page = () => {
     const {currentUser} = useAuth()
 
     useEffect(() => {
-        currentUser.logged && nav.push('/')
-    }, [currentUser])
+        onAuthStateChanged(auth, (u) => {
+            if(u){
+                nav.push('/')
+            }
+        })
+    }, [auth])
     
     const [user, setUser] = useState({
         username: '',
         email: '',
         password: ''
     })
+
     const nav = useRouter()
 
     const handleChange = (e: any)=>{

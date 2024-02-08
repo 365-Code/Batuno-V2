@@ -1,4 +1,3 @@
-import Image from 'next/image'
 import React from 'react'
 import FileSkeleton from './FileSkeleton'
 import Link from 'next/link'
