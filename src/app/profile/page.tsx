@@ -152,7 +152,7 @@ const Page = () => {
                   width={200}
                   src={avatar || avatars[4]}
                   alt="useravatar"
-                  className=" mx-auto w-[200px] h-[200px]"
+                  className={`mx-auto w-[200px] h-[200px] ${edit && "cursor-pointer"}`}
                 />
               </label>
               {/* <input accept="image/*" id="uploadAvatar" onChange={handleAvatar} multiple={false} type="file" className="hidden" /> */}
