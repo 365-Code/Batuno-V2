@@ -149,8 +149,8 @@ const DetailsSection = () => {
         <h3 className="text-slate-500 dark:text-white px-4">Shared files</h3>
         <div className="max-h-[150px] py-1 w-full overflow-y-scroll no-scrollbar">
           {/* <FileCard /> */}
-          {sharedFiles?.map((f) => (
-            <FileCard file={f} />
+          {sharedFiles?.map((f, i) => (
+            <FileCard key={i} file={f} />
           ))}
         </div>
       </div>
