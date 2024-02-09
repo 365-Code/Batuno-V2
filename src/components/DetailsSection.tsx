@@ -60,12 +60,8 @@ const DetailsSection = () => {
         let files = [] as Array<fileType>;
 
         messages.forEach((m: any) => {
-          console.log(m);
-
-          if (m.sender == currentUser.uid) {
-            if (m.files) {
-              files = [...files, ...m.files];
-            }
+          if(m.files){
+            files = [...files, ...m.files];
           }
         });
 
