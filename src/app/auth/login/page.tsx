@@ -1,7 +1,6 @@
 "use client"
 import { useAuth } from '@/context/AuthState'
 import { auth, db } from '@/utils/firebase'
-import { log } from 'console'
 import { onAuthStateChanged, signInWithEmailAndPassword } from 'firebase/auth'
 import { collection, doc, getDoc, getDocs } from 'firebase/firestore'
 import Link from 'next/link'

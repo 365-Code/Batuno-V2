@@ -49,7 +49,6 @@ const GroupChatSection = ({
             grps.push({ id: element, ...query.data() } as groupType);
           }
           setAllGroups(grps);
-          console.log(grps);
         });
       }
     } catch (error) {

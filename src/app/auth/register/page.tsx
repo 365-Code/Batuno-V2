@@ -50,7 +50,6 @@ const Page = () => {
         // favourites: [],
       })
 
-      console.log(userRef);
       nav.push('/auth/login')
     } catch (error: any) {
       toast.error(error.code.toString().split("/")[1]);

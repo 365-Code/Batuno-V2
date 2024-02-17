@@ -21,11 +21,9 @@ const Msg = ({msg, fromSelf, avatar, msgTime, mid}: {msg: string, fromSelf: bool
     try {
       const userRef = doc(db, 'users', mid);
       const result = await getDoc(userRef);
-      console.log(result.data());
 
       if(result.exists()){
         const usr = result.data();
-        console.log(result.data());
         setMsgAvatar(usr.avatar)
       }
     } catch (error) {
