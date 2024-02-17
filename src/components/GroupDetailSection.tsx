@@ -44,7 +44,7 @@ const GroupDetailsSection = () => {
 
         const { members } = result.data();
         let mems = [] as Array<{ uid: string, username: string; avatar: string }>;
-        members?.forEach(async (mem: string) => {
+        members?.filter((m: string) => m != currentUser.uid)?.forEach(async (mem: string) => {
           const userRef = doc(db, "users", mem);
           const result = await getDoc(userRef);
           if (result.exists()) {

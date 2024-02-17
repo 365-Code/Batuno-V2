@@ -42,7 +42,7 @@ const Page = () => {
         photoURL: avatar
       })
 
-      const userRef = await setDoc(doc(db, 'users', result.user.uid), {
+      await setDoc(doc(db, "users", result.user.uid), {
         uid: result.user.uid,
         username: user.username,
         email: result.user.email,

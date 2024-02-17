@@ -51,25 +51,31 @@ const ChatsSection = () => {
         const { contacts, favourites, groups } = result.data();
         let conts = [] as Array<chatUserType>
         contacts?.forEach( async (element: string) => {
-          const queryRef = doc(db, 'users', element)
-          const query = await getDoc(queryRef)
-          if(query.exists()){
-            conts.push(query.data() as chatUserType)
+          try{
+            const queryRef = doc(db, "users", element)
+            const query = await getDoc(queryRef)
+            if(query.exists()){
+              conts.push(query.data() as chatUserType)
+            }
+            setAllChats(conts);
+          } catch (error){
+            console.log(error);
           }
-          setAllChats(conts);
         });
         
 
         let favs = [] as Array<chatUserType>
         favourites?.forEach( async (element: string) => {
-          const queryRef = doc(db, 'users', element)
-          const query = await getDoc(queryRef)
-          
-          if(query.exists()){
-            favs.push(query.data() as chatUserType)
+          try {
+            const queryRef = doc(db, "users", element)
+            const query = await getDoc(queryRef)
+            if(query.exists()){
+              favs.push(query.data() as chatUserType)
+              setFavChats(favs)
+            }
+          } catch (error) {
+            
           }
-          setFavChats(favs)
-          // setFavChats([...favChats, ...favs])
         });
         
         

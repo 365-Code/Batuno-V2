@@ -42,13 +42,16 @@ const GroupChatSection = ({
         let grps = [] as Array<groupType>;
 
         groups.forEach(async (element: string) => {
-          const queryRef = doc(db, "groups", element);
-          const query = await getDoc(queryRef);
-
-          if (query.exists()) {
-            grps.push({ id: element, ...query.data() } as groupType);
+          try{
+            const queryRef = doc(db, "groups", element);
+            const query = await getDoc(queryRef);
+            if (query.exists()) {
+              grps.push({ id: element, ...query.data() } as groupType);
+            }
+            setAllGroups(grps);
+          } catch(error){
+            return error
           }
-          setAllGroups(grps);
         });
       }
     } catch (error) {

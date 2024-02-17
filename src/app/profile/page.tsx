@@ -84,7 +84,7 @@ const Page = () => {
         displayName: user.username,
         photoURL: user.avatar,
       })
-      const result = await updateDoc(doc(db, "users", currentUser.uid), {
+      await updateDoc(doc(db, "users", currentUser.uid), {
         username: user.username,
         avatar: user.avatar,
         phone: user.phone,

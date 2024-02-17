@@ -130,7 +130,7 @@ const GroupCreate = ({newGroup, setNewGroup}: {newGroup: boolean, setNewGroup: a
         const groupRef = collection(db, 'groups');
         const res = await addDoc(groupRef, group)
         members.forEach(async (mem: string) => {
-            const userRef = doc(db, 'users', mem);
+            const userRef = doc(db, "users", mem);
             await updateDoc(userRef, {
                 groups: arrayUnion(res.id)
             })
