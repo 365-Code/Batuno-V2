@@ -195,7 +195,9 @@ const GroupCreate = ({newGroup, setNewGroup}: {newGroup: boolean, setNewGroup: a
             </p>
 
             <div className="flex items-center gap-2">
-            <button onClick={handleCreateGroup} className="text-green-400 hover:text-green-500 underline">Create Group</button>
+              <button onClick={handleCreateGroup} className="text-green-400 border border-green-500 hover:text-white px-2 py-1 rounded-lg hover:bg-green-500 flex items-center">
+               Create Group
+              </button>
             <button onClick={handleCancel} className={`text-slate-400 hover:text-slate-500 ${newMembers.length >0 ? "sm:inline-block" : "sm:hidden"} `}>cancel</button>
             </div>
         </div>

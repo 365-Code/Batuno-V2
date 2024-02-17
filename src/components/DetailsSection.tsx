@@ -29,7 +29,7 @@ const DetailsSection = () => {
   });
   const [selectedDetail, setSelectedDetail] = useState('chat')
 
-  const [sharedFiles, setSharedFiles] = useState<Array<fileType>>();
+  const [sharedFiles, setSharedFiles] = useState<Array<fileType>>([]);
 
   const fetchDetails = async () => {
     try {
@@ -62,10 +62,10 @@ const DetailsSection = () => {
         messages.forEach((m: any) => {
           if(m.files){
             files = [...files, ...m.files];
+            setSharedFiles(files);
           }
         });
 
-        setSharedFiles(files);
       }
     } catch (error) {
       return error;
@@ -145,9 +145,11 @@ const DetailsSection = () => {
         <h3 className="text-slate-500 dark:text-white px-4">Shared files</h3>
         <div className="max-h-[150px] py-1 w-full overflow-y-scroll no-scrollbar">
           {/* <FileCard /> */}
-          {sharedFiles?.map((f, i) => (
-            <FileCard key={i} file={f} />
-          ))}
+          {sharedFiles.length > 0 ? (
+            sharedFiles.map((f, i) => <FileCard key={i} file={f} />)
+          ) : (
+            <p className="px-4 text-sm">No files shared yet</p>
+          )}
         </div>
       </div>
       <hr />

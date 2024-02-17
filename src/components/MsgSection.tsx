@@ -344,8 +344,8 @@ const MsgSection = () => {
                   {msg.files?.map((file: fileType, i: any) => (
                     <DisplayFiles
                       key={i}
-                      fromSelf={true}
-                      avatar={currentUser.avatar}
+                      fromSelf={false}
+                      avatar={chatUser.avatar}
                       index={i}
                       setZoom={handleSelectedZoom}
                       file={file}

@@ -10,6 +10,7 @@ export type AuthContextType = {
   currentUser: UserType;
   addFavourite: any;
   removeFavourite: any;
+  setCurrentUser: any;
 };
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -66,7 +67,7 @@ export const AuthState = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <AuthContext.Provider
-      value={{ currentUser, addFavourite, removeFavourite }}
+      value={{ currentUser, setCurrentUser, addFavourite, removeFavourite }}
     >
       {children}
     </AuthContext.Provider>

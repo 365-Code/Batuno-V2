@@ -1,33 +1,35 @@
 "use client";
 import { useChatUser } from "@/context/ChatState";
+import { db } from "@/utils/firebase";
+import { doc, getDoc } from "firebase/firestore";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useEffect } from "react";
 
-const ChatCard = ({
-  cName,
+const GroupCard = ({
+  gName,
   avatar,
-  cUid,
+  gid,
   inactive,
 }: {
-  cName?: string;
+  gName?: string;
   avatar?: string;
   inactive?: boolean;
-  cUid: string;
+  gid: string;
 }) => {
-  const { chatUser, setChatUser, clearGroup } = useChatUser();
+  const { group, setGroup, clearChatUser } = useChatUser();
   const nav = useRouter();
   const handleChatUser = () => {
-    setChatUser({ username: cName, uid: cUid, avatar });
-    clearGroup()
-    nav.push(`/?chat=${cName}`);
+    setGroup({ name: gName, id: gid, avatar });
+    clearChatUser();
+    nav.push(`/?group=${gName}`);
   };
 
   return (
     <div
       onClick={handleChatUser}
       className={`flex px-4 py-2 items-center justify-start gap-4 cursor-pointer ${
-        !inactive && chatUser?.uid == cUid
+        !inactive && group?.id == gid
           ? "bg-green-400 text-white"
           : " hover:text-green-400"
       }`}
@@ -44,9 +46,9 @@ const ChatCard = ({
           className="res-img"
         />
       </div>
-      <p>{cName || "Batuno"}</p>
+      <p>{gName || "Batuno"}</p>
     </div>
   );
 };
 
-export default ChatCard;
+export default GroupCard;

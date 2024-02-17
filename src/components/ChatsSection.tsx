@@ -14,6 +14,7 @@ import { db } from "@/utils/firebase";
 import { useAuth } from "@/context/AuthState";
 import { useChatUser } from "@/context/ChatState";
 import { onAuthStateChanged } from "firebase/auth";
+import GroupCard from "./GroupCard";
 
 const ChatsSection = () => {
   const [allChats, setAllChats] = useState([] as Array<chatUserType>);
@@ -45,11 +46,11 @@ const ChatsSection = () => {
     try {
       const userRef = doc(db, "users", currentUser.uid);
       const result = await getDoc(userRef);
-
+      
       if (result.exists()) {
         const { contacts, favourites, groups } = result.data();
         let conts = [] as Array<chatUserType>
-        contacts.forEach( async (element: string) => {
+        contacts?.forEach( async (element: string) => {
           const queryRef = doc(db, 'users', element)
           const query = await getDoc(queryRef)
           if(query.exists()){
@@ -57,11 +58,13 @@ const ChatsSection = () => {
           }
           setAllChats(conts);
         });
+        
 
         let favs = [] as Array<chatUserType>
-        favourites.forEach( async (element: string) => {
+        favourites?.forEach( async (element: string) => {
           const queryRef = doc(db, 'users', element)
           const query = await getDoc(queryRef)
+          
           if(query.exists()){
             favs.push(query.data() as chatUserType)
           }
@@ -69,8 +72,9 @@ const ChatsSection = () => {
           // setFavChats([...favChats, ...favs])
         });
         
+        
         let grps = [] as Array<groupType>
-        groups.forEach( async (element: string) => {
+        groups?.forEach( async (element: string) => {
           const queryRef = doc(db, 'groups', element)
           const query = await getDoc(queryRef)
           if(query.exists()){
@@ -80,6 +84,7 @@ const ChatsSection = () => {
           // setFavChats([...favChats, ...favs])
         });
       }
+
     } catch (error) {
       return error;
     }
@@ -197,10 +202,9 @@ const ChatsSection = () => {
           </h3>
           <div className="max-h-[140px] overflow-y-scroll custom-scrollbar">
             {allGroups.map((g, i) => (
-              <ChatCard key={g.id} cName={g.name} avatar={g.avatar} cUid={g.id} />
+              // <ChatCard key={g.id} cName={g.name} avatar={g.avatar} cUid={g.id} />
+              <GroupCard key={g.id} gName={g.name} avatar={g.avatar} gid={g.id} />
             ))}
-            {/* <ChatCard cName='Coffee Nerds' active={true}/>
-            <ChatCard cName='App Chemistry' active={false}/> */}
           </div>
         </div>
       )}

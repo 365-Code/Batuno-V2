@@ -13,6 +13,7 @@ import {
 import { db } from "@/utils/firebase";
 import { useAuth } from "@/context/AuthState";
 import { useChatUser } from "@/context/ChatState";
+import GroupCard from "./GroupCard";
 
 const GroupChatSection = ({
   newGroup,
@@ -106,10 +107,10 @@ const GroupChatSection = ({
           <h3 className="text-slate-500 py-1 px-4">Search</h3>
           <div className="max-h-[140px] overflow-y-scroll custom-scrollbar">
             {searchChats?.map((u, i) => (
-              <ChatCard
+              <GroupCard
                 key={u.uid}
-                cUid={u.uid}
-                cName={u.username}
+                gid={u.uid}
+                gName={u.username}
                 avatar={u.avatar}
                 inactive={true}
               />
@@ -128,11 +129,11 @@ const GroupChatSection = ({
             <i className="fi fi-sr-plus-hexagon text-xl" />
           </button>
         </div>
-        <h3 className="text-slate-500 dark:text-white py-1 px-4">All Chats</h3>
-        {!allGroups.length && <p className="py-2 px-4">No Contacts Yet</p>}
+        <h3 className="text-slate-500 dark:text-white py-1 px-4">All Groups</h3>
+        {!allGroups.length && <p className="py-2 px-4">No Groups Yet</p>}
         <div className="h-[240px] overflow-y-scroll custom-scrollbar">
-          {allGroups?.map((g, i) => (
-            <ChatCard key={g.id} cName={g.name} cUid={g.id} avatar={g.avatar} />
+          {allGroups?.map((g) => (
+            <GroupCard key={g.id} gName={g.name} gid={g.id} avatar={g.avatar} />
           ))}
         </div>
       </div>

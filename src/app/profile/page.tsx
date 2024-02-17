@@ -2,7 +2,7 @@
 import ErrorText from "@/components/ErrorText";
 import NavSection from "@/components/NavSection";
 import { useAuth } from "@/context/AuthState";
-import { avatars } from "@/utils";
+import { UserType, avatars } from "@/utils";
 import { auth, db, storage } from "@/utils/firebase";
 import { updateProfile } from "firebase/auth";
 import { doc, updateDoc } from "firebase/firestore";
@@ -11,7 +11,7 @@ import Image from "next/image";
 import React, { ChangeEvent, useEffect, useState } from "react";
 
 const Page = () => {
-  const { currentUser } = useAuth();
+  const { currentUser, setCurrentUser } = useAuth();
   const [user, setUser] = useState({
     username: "",
     avatar: "",
@@ -84,11 +84,15 @@ const Page = () => {
         displayName: user.username,
         photoURL: user.avatar,
       })
-      await updateDoc(doc(db, "users", currentUser.uid), {
+      const result = await updateDoc(doc(db, "users", currentUser.uid), {
         username: user.username,
         avatar: user.avatar,
         phone: user.phone,
       });
+
+      setCurrentUser( (preVal: UserType) => ({...preVal, username: user.username, avatar: user.avatar, phone: user.phone}) )
+
+
       }
     } catch (error) {
       return error;

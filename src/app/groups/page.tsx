@@ -11,7 +11,6 @@ const Page = () => {
       <div className="max-w-full w-full h-full flex md:justify-center">
         <NavSection />
             <GroupChatSection newGroup={newGroup} setNewGroup={setNewGroup}/>
-            
             <GroupCreate newGroup={newGroup} setNewGroup={setNewGroup}/>
         {/* <GroupMsgSection/> */}
       </div>
