@@ -1,5 +1,5 @@
 "use client";
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import FileCard from "./FileCard";
 import ToggleButton from "./ToggleButton";
 import Image from "next/image";
@@ -7,10 +7,8 @@ import { useChatUser } from "@/context/ChatState";
 import {
   arrayRemove,
   arrayUnion,
-  collection,
   doc,
   getDoc,
-  getDocs,
   updateDoc,
 } from "firebase/firestore";
 import { db } from "@/utils/firebase";
@@ -124,7 +122,7 @@ const DetailsSection = () => {
                 details.avatar ||
                 "https://img.freepik.com/free-photo/young-woman-with-round-glasses-yellow-sweater_273609-7091.jpg?size=626&ext=jpg&ga=GA1.1.2058463804.1704785941&semt=ais"
               }
-              alt=""
+              alt="user-avatar"
               className="res-img"
             />
           </div>
@@ -134,9 +132,9 @@ const DetailsSection = () => {
           </p>
         </div>
         <div className="flex items-center justify-center gap-4">
-          <i className={`fi fi-sr-phone-flip rotate-90 p-4 border rounded-full hover:text-white hover:bg-green-400 hover:border-green-500 cursor-pointer ${selectedDetail == "call" && "bg-green-500 border-green-500"}`} />
-          <i className={`fi fi-sr-beacon p-4 border rounded-full hover:text-white hover:bg-green-400 hover:border-green-500 cursor-pointer ${selectedDetail == "chat" && "bg-green-500 border-green-500"}`} />
-          <i className={`fi fi-sr-video-camera-alt p-4 border rounded-full hover:text-white hover:bg-green-400 hover:border-green-500 cursor-pointer ${selectedDetail == "videoCall" && "bg-green-500 border-green-500"}`} />
+          <i onClick={()=>setSelectedDetail("call")} className={`fi fi-sr-phone-flip rotate-90 p-4 border rounded-full hover:text-white hover:bg-green-400 hover:border-green-500 cursor-pointer ${selectedDetail == "call" && "bg-green-500 border-green-500"}`} />
+          <i onClick={()=>setSelectedDetail("chat")} className={`fi fi-sr-beacon p-4 border rounded-full hover:text-white hover:bg-green-400 hover:border-green-500 cursor-pointer ${selectedDetail == "chat" && "bg-green-500 border-green-500"}`} />
+          <i onClick={()=>setSelectedDetail("videoCall")} className={`fi fi-sr-video-camera-alt p-4 border rounded-full hover:text-white hover:bg-green-400 hover:border-green-500 cursor-pointer ${selectedDetail == "videoCall" && "bg-green-500 border-green-500"}`} />
         </div>
       </div>
       <hr className="invisible" />
@@ -144,7 +142,6 @@ const DetailsSection = () => {
       <div id="otherfiles">
         <h3 className="text-slate-500 dark:text-white px-4">Shared files</h3>
         <div className="max-h-[150px] py-1 w-full overflow-y-scroll no-scrollbar">
-          {/* <FileCard /> */}
           {sharedFiles.length > 0 ? (
             sharedFiles.map((f, i) => <FileCard key={i} file={f} />)
           ) : (
@@ -157,7 +154,6 @@ const DetailsSection = () => {
         <div className="px-4 py-2 flex items-center justify-between">
           <p className="text-slate-500 dark:text-white">Add to Favourites</p>
           <ToggleButton toggleChange={fav} setToggleChange={setFav} />
-          {/* <input type="checkbox" checked={favourite} name="addToFavourite" className="" id="addToFavourite" /> */}
         </div>
         <hr />
         <button

@@ -166,7 +166,7 @@ const GroupCreate = ({newGroup, setNewGroup}: {newGroup: boolean, setNewGroup: a
               "https://img.freepik.com/free-vector/students-thinking-concept-illustration_114360-18754.jpg?w=740&t=st=1707023400~exp=1707024000~hmac=957ede2326f8b079f2fa96e8fe28ec43723ed57ef099f278c65ca160581c3f87"
             // "https://img.freepik.com/free-vector/social-media-concept_23-2147510202.jpg?1&w=740&t=st=1707023447~exp=1707024047~hmac=db20556083aef5e14f5dba0b401f1057af31882989445622fb0480b522088244"
             }
-            alt="avatar"
+            alt="group-avatar"
             className="w-[48px] h-[48px] rounded-full res-img"
           />
         </label>

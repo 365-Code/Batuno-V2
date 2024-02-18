@@ -99,7 +99,7 @@ const Page = () => {
             htmlFor="avatar"
             className=" cursor-pointer w-[64px] h-[64px] overflow-hidden rounded-full"
           >
-            <Image height={100} width={100} src={avatar || avatars[3]} alt="avatar" className="res-img" />
+            <Image height={100} width={100} src={avatar || avatars[3]} alt="user-avatar" className="res-img" />
           </label>
           <input
             name="avatar"

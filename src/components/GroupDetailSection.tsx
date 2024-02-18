@@ -99,7 +99,7 @@ const GroupDetailsSection = () => {
                 details.avatar ||
                 "https://img.freepik.com/free-photo/young-woman-with-round-glasses-yellow-sweater_273609-7091.jpg?size=626&ext=jpg&ga=GA1.1.2058463804.1704785941&semt=ais"
               }
-              alt=""
+              alt="group-avatar"
               className="res-img"
             />
           </div>
@@ -132,7 +132,7 @@ const GroupDetailsSection = () => {
         <h3 className="text-slate-500 dark:text-white px-4">Group Members</h3>
         <div className="max-h-[150px] py-1 w-full overflow-y-scroll no-scrollbar">
           {groupMembers.length > 0 ? (
-            groupMembers.map((mem, i) => (
+            groupMembers.map((mem) => (
               <button
                   key={mem.uid}
                   onClick={()=>setChatDetails(mem.uid)}
@@ -146,7 +146,7 @@ const GroupDetailsSection = () => {
                         mem.avatar ||
                         "https://img.freepik.com/free-photo/view-3d-confident-businessman_23-2150709932.jpg?t=st=1705210759~exp=1705214359~hmac=fd5a10a8cb94fb6f8c6c19553a52d1d2c2ebc4856ca83543da774e896ed6fb67&w=740"
                       }
-                      alt="avatar"
+                      alt="profile-avatar"
                       className="res-img"
                     />
                   </div>

@@ -37,7 +37,6 @@ const DisplayFiles = ({
       hour: "2-digit",
       minute: "2-digit",
     }),
-    // day: new Date(msgTime.seconds*1000).toDateString(),
     day: new Date(msgTime.seconds * 1000).toLocaleDateString(undefined, {
       weekday: "short",
       month: "short",
@@ -89,7 +88,7 @@ const DisplayFiles = ({
           width={100}
           className="w-[30px] h-[30px] rounded-full"
           src={avatar}
-          alt="avatar"
+          alt="profile-avatar"
         />
       </p>
     </div>

@@ -6,5 +6,8 @@
         "other": "on",
         "comments": "off",
         "strings": "on"
-    }
+    },
+    "workbench.colorCustomizations": {
+        "editorUnnecessaryCode.border": "#c6dd7a"
+        },
 }
