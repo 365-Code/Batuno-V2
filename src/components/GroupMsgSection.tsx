@@ -25,10 +25,12 @@ import Image from "next/image";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import FileSkeleton from "./FileSkeleton";
 import DisplayFiles from "./DisplayFiles";
+import { useRouter } from "next/navigation";
 
 const MsgSection = () => {
   const { currentUser } = useAuth();
   const { group, clearGroup, groupDetails, setGroupDetails } = useChatUser();
+  const nav = useRouter()
 
   const [msgs, setMsgs] = useState<messagesType>({
     id: "",
@@ -236,7 +238,7 @@ const MsgSection = () => {
           </h3>
 
           <i
-            onClick={() => clearGroup()}
+            onClick={() => {nav.push('/'); clearGroup()}}
             className="sm:hidden fi fi-sr-cross-small ml-auto cursor-pointer"
           />
         </div>

@@ -68,12 +68,12 @@ const DisplayFiles = ({
         </div>
       )}
 
-      <p
+      <div
         className={`${
           fromSelf ? "flex-row justify-end" : "flex-row-reverse justify-end"
         } flex items-start gap-2 text-xs`}
       >
-        <p className="">
+        <div className="">
           {today.day != msgDate.day && (
             <p>
               {msgDate.day +
@@ -82,15 +82,15 @@ const DisplayFiles = ({
             </p>
           )}
           {today.time == msgDate.time ? "just now" : <p>{msgDate.time}</p>}
-        </p>
+        </div>
         <Image
           height={100}
           width={100}
           className="w-[30px] h-[30px] rounded-full"
-          src={avatar}
+          src={avatar || ""}
           alt="profile-avatar"
         />
-      </p>
+      </div>
     </div>
   );
 };
