@@ -1,7 +1,7 @@
 "use client";
 import React, { ChangeEvent, useEffect, useState } from "react";
 import ChatCard from "./ChatCard";
-import {chatUser, chatUserType, groupType } from "@/utils";
+import { chatUserType, groupType } from "@/utils";
 import {
   collection,
   doc,

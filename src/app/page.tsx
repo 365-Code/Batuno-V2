@@ -10,7 +10,7 @@ import { useChatUser } from "@/context/ChatState";
 import React from "react";
 
 const Home = () => {
-  const { chatUser, group, groupDetails, chatDetails } = useChatUser();
+  const { chatUser, group, chatDetails } = useChatUser();
 
   return (
     <main className="h-screen flex items-center justify-center md:p-4">
