@@ -1,26 +1,19 @@
 "use client";
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import FileCard from "./FileCard";
-import ToggleButton from "./ToggleButton";
 import Image from "next/image";
 import { useChatUser } from "@/context/ChatState";
 import {
-  arrayRemove,
-  arrayUnion,
-  collection,
   doc,
-  getDoc,
-  getDocs,
-  updateDoc,
+  getDoc
 } from "firebase/firestore";
 import { db } from "@/utils/firebase";
 import { useAuth } from "@/context/AuthState";
 import { fileType } from "@/utils";
 
 const GroupDetailsSection = () => {
-  const { group, setChatDetails, groupDetails, clearGroupDetails } = useChatUser();
-  const { currentUser, addFavourite, removeFavourite } = useAuth();
-  const [fav, setFav] = useState<boolean>(false);
+  const { setChatDetails, groupDetails, clearGroupDetails } = useChatUser();
+  const { currentUser } = useAuth();
   const [groupMembers, setGroupMembers] = useState([] as Array<any>);
   const [details, setDetails] = useState({
     username: "",
@@ -49,8 +42,7 @@ const GroupDetailsSection = () => {
           const result = await getDoc(userRef);
           if (result.exists()) {
             const { uid, username, avatar } = result.data();
-            // mems.push({ uid, username, avatar });
-            mems = [...mems, { uid, username, avatar }]
+            mems = [...mems, { uid, username, avatar }];
             setGroupMembers(mems);
           }
         });
@@ -110,16 +102,19 @@ const GroupDetailsSection = () => {
         </div>
         <div className="flex items-center justify-center gap-4">
           <i
+          onClick={()=>setSelectedDetail("call")}
             className={`fi fi-sr-phone-flip rotate-90 p-4 border rounded-full hover:text-white hover:bg-green-400 hover:border-green-500 cursor-pointer ${
               selectedDetail == "call" && "bg-green-500 border-green-500"
             }`}
           />
           <i
+          onClick={()=>setSelectedDetail("chat")}
             className={`fi fi-sr-beacon p-4 border rounded-full hover:text-white hover:bg-green-400 hover:border-green-500 cursor-pointer ${
               selectedDetail == "chat" && "bg-green-500 border-green-500"
             }`}
           />
           <i
+          onClick={()=>setSelectedDetail("videoCall")}
             className={`fi fi-sr-video-camera-alt p-4 border rounded-full hover:text-white hover:bg-green-400 hover:border-green-500 cursor-pointer ${
               selectedDetail == "videoCall" && "bg-green-500 border-green-500"
             }`}

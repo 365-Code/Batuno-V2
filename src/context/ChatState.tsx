@@ -37,7 +37,6 @@ export const ChatUserState = ({children}: {children: React.ReactNode})=>{
 
     const [chatUser, setChatUser] = useState<chatUserType>(initialChatUser)
     const [group, setGroup] = useState<groupType>(initialGroup)
-    // const [chatDetails, setChatDetails] = useState<detailType>(initialChatDetail)
     const [chatDetails, setChatDetails] = useState('')
     const [groupDetails, setGroupDetails] = useState('')
 

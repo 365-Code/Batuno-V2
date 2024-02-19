@@ -1,7 +1,7 @@
 "use client";
 import React, { ChangeEvent, useEffect, useState } from "react";
 import ChatCard from "./ChatCard";
-import {chatUserType, groupType } from "@/utils";
+import {chatUser, chatUserType, groupType } from "@/utils";
 import {
   collection,
   doc,
@@ -25,7 +25,7 @@ const ChatsSection = () => {
   const [loadingChats, setLoadingChats] = useState(true);
 
   const { currentUser } = useAuth();
-  const { chatUser } = useChatUser();
+  const { chatUser, group } = useChatUser();
 
   const getMyChats = async () => {
     try {
@@ -105,10 +105,12 @@ const ChatsSection = () => {
     searchInput ? searchChat() : setSearchChats([]);
   }, [searchInput]);
 
+  
+
   return (
     <section
       className={`${
-        chatUser.uid ? "w-0 dark:border-0" : "w-full dark:border-r"
+        chatUser.uid || group.id ? "w-0 dark:border-0" : "w-full dark:border-r"
       } overflow-hidden sm:w-[250px] md:w-[300px] px-0 gap-2 flex flex-col dark:bg-[#0d121b] sm:dark:border-r dark:border-white/10`}
     >
       <div
@@ -175,7 +177,7 @@ const ChatsSection = () => {
             </div>
           ))
         ) : (
-          <p className="py-2 px-4">No Contacts Yet</p>
+          !allChats.length && <p className="py-2 px-4">No Contacts Yet</p>
         )}
 
         <div className="max-h-[240px] overflow-y-scroll custom-scrollbar">

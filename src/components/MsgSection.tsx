@@ -304,7 +304,7 @@ const MsgSection = () => {
 
           <i
             onClick={() => clearChatUser()}
-            className="sm:hidden fi fi-sr-cross ml-auto cursor-pointer"
+            className="sm:hidden fi fi-sr-cross-small ml-auto cursor-pointer"
           />
         </div>
 
