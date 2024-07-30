@@ -15,6 +15,7 @@ import { useAuth } from "@/context/AuthState";
 import { useChatUser } from "@/context/ChatState";
 import GroupCard from "./GroupCard";
 import CardSkeleton from "./CardSkeleton";
+import IncomingCall from "./Call/IncomingCall";
 
 const ChatsSection = () => {
   const [allChats, setAllChats] = useState([] as Array<chatUserType>);
@@ -105,8 +106,6 @@ const ChatsSection = () => {
     searchInput ? searchChat() : setSearchChats([]);
   }, [searchInput]);
 
-  
-
   return (
     <section
       className={`${
@@ -166,19 +165,20 @@ const ChatsSection = () => {
 
       <div id="all-chats" className="max-h-full h-fit">
         <h3 className="text-slate-500 dark:text-white py-1 px-4">All Chats</h3>
-        {loadingChats ? (
-          [...Array(5)].map((x, i) => (
-            <div
-              key={i}
-              className={`animate-pulse px-4 my-2`}
-              style={{ animationDelay: `${i * 0.1}s`, animationDuration: "1s" }}
-            >
-              <CardSkeleton />
-            </div>
-          ))
-        ) : (
-          !allChats.length && <p className="py-2 px-4">No Contacts Yet</p>
-        )}
+        {loadingChats
+          ? [...Array(5)].map((x, i) => (
+              <div
+                key={i}
+                className={`animate-pulse px-4 my-2`}
+                style={{
+                  animationDelay: `${i * 0.1}s`,
+                  animationDuration: "1s",
+                }}
+              >
+                <CardSkeleton />
+              </div>
+            ))
+          : !allChats.length && <p className="py-2 px-4">No Contacts Yet</p>}
 
         <div className="max-h-[240px] overflow-y-scroll custom-scrollbar">
           {allChats?.map((u, i) => (

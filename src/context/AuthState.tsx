@@ -16,7 +16,7 @@ export type AuthContextType = {
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthState = ({ children }: { children: React.ReactNode }) => {
-    const nav = useRouter()
+  const nav = useRouter();
 
   useEffect(() => {
     onAuthStateChanged(auth, async (user) => {
@@ -35,8 +35,14 @@ export const AuthState = ({ children }: { children: React.ReactNode }) => {
           avatar: "",
           logged: false,
           favourites: [],
+          onCall: false,
+          call: {
+            requestFrom: "",
+            requestTo: "",
+            roomId: "",
+          },
         });
-        nav.push('/auth/login')
+        nav.push("/auth/login");
       }
     });
   }, [auth]);
@@ -48,6 +54,12 @@ export const AuthState = ({ children }: { children: React.ReactNode }) => {
     avatar: "",
     logged: false,
     favourites: [],
+    onCall: false,
+    call: {
+      requestTo: "",
+      requestFrom: "",
+      roomId: "",
+    },
   });
 
   const addFavourite = (newUser: string) => {

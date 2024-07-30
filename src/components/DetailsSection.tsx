@@ -14,6 +14,7 @@ import {
 import { db } from "@/utils/firebase";
 import { useAuth } from "@/context/AuthState";
 import { fileType } from "@/utils";
+import MakeCall from "@/components/Call/MakeCall";
 
 const DetailsSection = () => {
   const { chatUser, chatDetails, clearChatDetails } = useChatUser();
@@ -25,7 +26,7 @@ const DetailsSection = () => {
     phone: "",
     avatar: "",
   });
-  const [selectedDetail, setSelectedDetail] = useState('chat')
+  const [selectedDetail, setSelectedDetail] = useState("chat");
 
   const [sharedFiles, setSharedFiles] = useState<Array<fileType>>([]);
 
@@ -58,12 +59,11 @@ const DetailsSection = () => {
         let files = [] as Array<fileType>;
 
         messages.forEach((m: any) => {
-          if(m.files){
+          if (m.files) {
             files = [...files, ...m.files];
             setSharedFiles(files);
           }
         });
-
       }
     } catch (error) {
       return error;
@@ -132,9 +132,21 @@ const DetailsSection = () => {
           </p>
         </div>
         <div className="flex items-center justify-center gap-4">
-          <i onClick={()=>setSelectedDetail("call")} className={`fi fi-sr-phone-flip rotate-90 p-4 border rounded-full hover:text-white hover:bg-green-400 hover:border-green-500 cursor-pointer ${selectedDetail == "call" && "bg-green-500 border-green-500"}`} />
-          <i onClick={()=>setSelectedDetail("chat")} className={`fi fi-sr-beacon p-4 border rounded-full hover:text-white hover:bg-green-400 hover:border-green-500 cursor-pointer ${selectedDetail == "chat" && "bg-green-500 border-green-500"}`} />
-          <i onClick={()=>setSelectedDetail("videoCall")} className={`fi fi-sr-video-camera-alt p-4 border rounded-full hover:text-white hover:bg-green-400 hover:border-green-500 cursor-pointer ${selectedDetail == "videoCall" && "bg-green-500 border-green-500"}`} />
+          <MakeCall
+            requestTo={chatUser.uid}
+          />
+          <i
+            onClick={() => setSelectedDetail("chat")}
+            className={`fi fi-sr-beacon p-4 border rounded-full hover:text-white hover:bg-green-400 hover:border-green-500 cursor-pointer ${
+              selectedDetail == "chat" && "bg-green-500 border-green-500"
+            }`}
+          />
+          <i
+            onClick={() => setSelectedDetail("videoCall")}
+            className={`fi fi-sr-video-camera-alt p-4 border rounded-full hover:text-white hover:bg-green-400 hover:border-green-500 cursor-pointer ${
+              selectedDetail == "videoCall" && "bg-green-500 border-green-500"
+            }`}
+          />
         </div>
       </div>
       <hr className="invisible" />

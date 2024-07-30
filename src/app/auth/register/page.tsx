@@ -1,9 +1,8 @@
 "use client";
 import { avatars } from "@/utils";
 import { auth, db, storage } from "@/utils/firebase";
-import { FirebaseError } from "firebase/app";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { addDoc, collection, doc, setDoc } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import Image from "next/image";
 import Link from "next/link";
@@ -18,9 +17,9 @@ const Page = () => {
     password: "",
   });
 
-  const nav = useRouter()
+  const nav = useRouter();
 
-  const [avatar, setAvatar] = useState(avatars[3]);
+  const [avatar, setAvatar] = useState("");
 
   const handleChange = (e: any) => {
     const { name, value } = e.target;
@@ -32,15 +31,16 @@ const Page = () => {
       const result = await createUserWithEmailAndPassword(
         auth,
         user.email,
-        user.password,
+        user.password
       );
 
       toast.success("Registered Successfully");
 
       await updateProfile(result.user, {
         displayName: user.username,
-        photoURL: avatar
-      })
+        photoURL: avatar,
+      });
+      console.log(result);
 
       await setDoc(doc(db, "users", result.user.uid), {
         uid: result.user.uid,
@@ -48,9 +48,9 @@ const Page = () => {
         email: result.user.email,
         avatar: avatar,
         // favourites: [],
-      })
+      });
 
-      nav.push('/auth/login')
+      nav.push("/auth/login");
     } catch (error: any) {
       toast.error(error.code.toString().split("/")[1]);
       return error;
@@ -61,21 +61,24 @@ const Page = () => {
     if (!img) return;
     const avatarRef = ref(storage, `avatars/${img?.name}`);
     const uploadTask = uploadBytesResumable(avatarRef, img);
-    uploadTask.on("state_changed", (snapshot: any) => {
-    },
-        (error: any) => {
-            console.log(error);
-        },
-        () => {
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            setAvatar(downloadURL)
-          });
+    uploadTask.on(
+      "state_changed",
+      (snapshot: any) => {},
+      (error: any) => {
+        console.log(error);
+      },
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          setAvatar(downloadURL);
         });
+      }
+    );
   };
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    register()
+    
+    register();
   };
 
   return (
@@ -99,11 +102,17 @@ const Page = () => {
             htmlFor="avatar"
             className=" cursor-pointer w-[64px] h-[64px] overflow-hidden rounded-full"
           >
-            <Image height={100} width={100} src={avatar || avatars[3]} alt="user-avatar" className="res-img" />
+            <Image
+              height={100}
+              width={100}
+              src={avatar || "/avatar.png"}
+              alt="user-avatar"
+              className="res-img"
+            />
           </label>
           <input
             name="avatar"
-            onChange={(e: any) => uploadFile(e.target.files[0]) }
+            onChange={(e: any) => uploadFile(e.target.files[0])}
             type="file"
             id="avatar"
             className="hidden"

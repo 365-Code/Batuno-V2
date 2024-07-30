@@ -26,13 +26,14 @@ import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import FileSkeleton from "./FileSkeleton";
 import DisplayFiles from "./DisplayFiles";
 import { useRouter } from "next/navigation";
+import OnCall from "./Call/OnCall";
 
 const MsgSection = () => {
   const { currentUser } = useAuth();
   const { chatUser, clearChatUser, chatDetails, setChatDetails } =
     useChatUser();
 
-    const nav = useRouter()
+  const nav = useRouter();
 
   const [msgs, setMsgs] = useState<messagesType>({
     id: "",
@@ -267,7 +268,10 @@ const MsgSection = () => {
             {msgs.name || "Chat Name"}
           </h3>
           <i
-            onClick={() => {nav.push('/'); clearChatUser()}}
+            onClick={() => {
+              nav.push("/");
+              clearChatUser();
+            }}
             className="sm:hidden fi fi-sr-cross-small ml-auto cursor-pointer"
           />
         </div>
@@ -424,6 +428,13 @@ const MsgSection = () => {
             </button>
           </div>
         </div>
+
+        {
+          // all call requests
+          currentUser.onCall && !currentUser.call && (
+            <OnCall id={chatUser.uid} name={chatUser.username} />
+          )
+        }
       </section>
       <Modal
         showModal={selectZoom.id == -1 ? false : true}

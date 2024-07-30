@@ -1,6 +1,5 @@
 "use client";
 import React, { ChangeEvent, useEffect, useState } from "react";
-import ChatCard from "./ChatCard";
 import { chatUserType, groupType } from "@/utils";
 import {
   collection,

@@ -1,13 +1,13 @@
 {
-    "files.associations": {
-        "*.css": "tailwindcss"
-    },
-    "editor.quickSuggestions": {
-        "other": "on",
-        "comments": "off",
-        "strings": "on"
-    },
-    "workbench.colorCustomizations": {
-        "editorUnnecessaryCode.border": "#c6dd7a"
-        },
+  "files.associations": {
+    "*.css": "tailwindcss"
+  },
+  "editor.quickSuggestions": {
+    "other": "on",
+    "comments": "off",
+    "strings": "on"
+  },
+  "workbench.colorCustomizations": {
+    "editorUnnecessaryCode.border": "#c6dd7a"
+  }
 }
