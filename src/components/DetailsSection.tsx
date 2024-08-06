@@ -132,9 +132,7 @@ const DetailsSection = () => {
           </p>
         </div>
         <div className="flex items-center justify-center gap-4">
-          <MakeCall
-            requestTo={chatUser.uid}
-          />
+          <MakeCall requestTo={chatUser.uid} />
           <i
             onClick={() => setSelectedDetail("chat")}
             className={`fi fi-sr-beacon p-4 border rounded-full hover:text-white hover:bg-green-400 hover:border-green-500 cursor-pointer ${

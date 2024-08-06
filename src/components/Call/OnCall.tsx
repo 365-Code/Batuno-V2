@@ -2,21 +2,62 @@
 import { useAuth } from "@/context/AuthState";
 import { requestType, UserType } from "@/utils";
 import { db } from "@/utils/firebase";
-import {
-  arrayRemove,
-  collection,
-  doc,
-  getDoc,
-  onSnapshot,
-  query,
-  updateDoc,
-  where,
-} from "firebase/firestore";
-import React, { useEffect } from "react";
-import Test from "./IncomingCall";
+import { doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
+import React, { use, useEffect } from "react";
 
 const OnCall = ({ id, name }: { id: string; name: string }) => {
   const { currentUser, setCurrentUser } = useAuth();
+
+  async function handleMissed() {
+    const combineId =
+      currentUser.uid > id ? currentUser.uid + id : id + currentUser.uid;
+    const chatRef = doc(db, "chats", combineId);
+    const userRef = doc(db, "users", currentUser.uid);
+    const chatUserRef = doc(db, "users", id);
+    // const userRef = collection(db, "users", currentUser.uid);
+    try {
+      const userRes = await getDoc(userRef);
+      if (userRes.exists()) {
+        const request = userRes.data().request;
+        if (request && request.status == "waiting") {
+          const result = await getDoc(chatUserRef);
+          if (!result.exists()) throw new Error("user not found");
+          const logs = result.data().logs as Array<{
+            roomId: string;
+            sender: string;
+          }>;
+          const updatedLogs = logs.filter(
+            (log) => log.sender != currentUser.uid
+          );
+          await updateDoc(chatUserRef, {
+            logs: updatedLogs,
+          });
+          await updateDoc(userRef, {
+            request: null,
+          });
+          await updateDoc(chatRef, {
+            logs: {
+              from: currentUser.uid,
+              status: "missed",
+            },
+          });
+        }
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setCurrentUser((prev: UserType) => ({ ...prev, onCall: false }));
+    }
+  }
+
+  useEffect(() => {
+    const debounce = setTimeout(() => {
+      handleMissed();
+    }, 30000);
+
+    return () => clearTimeout(debounce);
+  }, []);
+
   async function handlehangup() {
     const combineId =
       currentUser.uid > id ? currentUser.uid + id : id + currentUser.uid;
@@ -59,11 +100,15 @@ const OnCall = ({ id, name }: { id: string; name: string }) => {
           const request = doc.data().request as requestType;
           if (!request || request.status == "waiting") return;
           else if (request.status == "accepted") {
-            setCurrentUser((prev: UserType) => ({ ...prev, onCall: true, call: {
-              roomId: request.roomId,
-              requestFrom: request.sender,
-              requestTo: request.receiver,
-            } }));
+            setCurrentUser((prev: UserType) => ({
+              ...prev,
+              onCall: true,
+              call: {
+                roomId: request.roomId,
+                requestFrom: request.sender,
+                requestTo: request.receiver,
+              },
+            }));
           } else if (request.status == "rejected") {
             setCurrentUser((prev: UserType) => ({
               ...prev,

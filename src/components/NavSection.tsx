@@ -34,20 +34,24 @@ const NavSection = () => {
         <Link
           href={"/"}
           onClick={handleChat}
+          title="Chats"
           className={`${pathname == "/" && "icon-selected"} nav-icon`}
         >
           <i className="fi fi-sr-comments p-4" />
         </Link>
-        <Link href={"/groups"} 
+        <Link
+          title="Groups"
+          href={"/groups"}
           className={`${pathname == "/groups" && "icon-selected"} nav-icon`}
         >
           <i className="fi fi-sr-users p-4" />
         </Link>
 
-        <Link href={"/"} className="nav-icon">
+        <Link title="archive" href={"/"} className="nav-icon">
           <i className="fi fi-sr-archive p-4" />
         </Link>
         <Link
+          title="profile"
           href={"/profile"}
           className={`${pathname == "/profile" && "icon-selected"} nav-icon`}
         >
@@ -56,13 +60,13 @@ const NavSection = () => {
       </div>
 
       <button
+        title="logout"
         onClick={() => signOut(auth)}
         id="profile"
         className="py-4 nav-icon"
       >
-        <span className="text-sm">log</span>
         <i className="text-2xl fi fi-sr-power" />
-        <span className="text-sm">out</span>
+        <span className="text-sm">logout</span>
       </button>
     </section>
   );
