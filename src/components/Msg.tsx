@@ -21,7 +21,9 @@ const Msg = ({
   const scrollRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (scrollRef.current) {
+      scrollRef.current.scrollIntoView({ behavior: "smooth" });
+    }
   }, []);
 
   const [msgAvatar, setMsgAvatar] = useState("");
@@ -63,7 +65,6 @@ const Msg = ({
       hour: "2-digit",
       minute: "2-digit",
     }),
-    // day: new Date(msgTime.seconds*1000).toDateString(),
     day: new Date(msgTime.seconds * 1000).toLocaleDateString(undefined, {
       weekday: "short",
       month: "short",

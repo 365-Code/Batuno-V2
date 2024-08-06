@@ -21,7 +21,7 @@ const Page = () => {
     username: false,
     phone: false,
   });
-  const [avatar, setAvatar] = useState<any>(currentUser.avatar || '');
+  const [avatar, setAvatar] = useState<any>(currentUser.avatar || "");
   const [edit, setEdit] = useState(false);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -35,7 +35,7 @@ const Page = () => {
 
   const uploadFile = async (img: any) => {
     if (!img) return;
-    const avatarRef = ref(storage, `avatars/${currentUser.uid+img?.name}`);
+    const avatarRef = ref(storage, `avatars/${currentUser.uid + img?.name}`);
     const uploadTask = uploadBytesResumable(avatarRef, img);
     uploadTask.on(
       "state_changed",
@@ -54,7 +54,7 @@ const Page = () => {
   const handleAvatar = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files?.length) {
       setAvatar(URL.createObjectURL(e.target.files[0]));
-      uploadFile(e.target.files[0])
+      uploadFile(e.target.files[0]);
     }
   };
 
@@ -79,20 +79,23 @@ const Page = () => {
     }
     setEdit(false);
     try {
-      if(auth.currentUser){
-      await updateProfile(auth.currentUser, {
-        displayName: user.username,
-        photoURL: user.avatar,
-      })
-      await updateDoc(doc(db, "users", currentUser.uid), {
-        username: user.username,
-        avatar: user.avatar,
-        phone: user.phone,
-      });
+      if (auth.currentUser) {
+        await updateProfile(auth.currentUser, {
+          displayName: user.username,
+          photoURL: user.avatar,
+        });
+        await updateDoc(doc(db, "users", currentUser.uid), {
+          username: user.username,
+          avatar: user.avatar,
+          phone: user.phone,
+        });
 
-      setCurrentUser( (preVal: UserType) => ({...preVal, username: user.username, avatar: user.avatar, phone: user.phone}) )
-
-
+        setCurrentUser((preVal: UserType) => ({
+          ...preVal,
+          username: user.username,
+          avatar: user.avatar,
+          phone: user.phone,
+        }));
       }
     } catch (error) {
       return error;
@@ -156,16 +159,14 @@ const Page = () => {
                   width={200}
                   src={avatar || avatars[4]}
                   alt="useravatar"
-                  className={`mx-auto w-[200px] h-[200px] ${edit && "cursor-pointer"}`}
+                  className={`mx-auto w-[200px] h-[200px] ${
+                    edit && "cursor-pointer"
+                  }`}
                 />
               </label>
-              {/* <input accept="image/*" id="uploadAvatar" onChange={handleAvatar} multiple={false} type="file" className="hidden" /> */}
               <input
                 accept="image/*"
                 id="uploadAvatar"
-                // onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                //   e.target.files?.length && uploadFile(e.target.files[0]);
-                // }}
                 onChange={handleAvatar}
                 multiple={false}
                 type="file"
@@ -189,7 +190,10 @@ const Page = () => {
                       <i className="fi fi-sr-check" />
                     </button>
                     <button
-                      onClick={() => {setEdit(false); setAvatar(currentUser.avatar)}}
+                      onClick={() => {
+                        setEdit(false);
+                        setAvatar(currentUser.avatar);
+                      }}
                       className="basis-1/2 rounded-lg bg-slate-400 hover:bg-slate-500 text-white flex items-center gap-2 justify-center mx-auto"
                     >
                       <span>Cancel</span>

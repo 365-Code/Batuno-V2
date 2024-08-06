@@ -20,7 +20,7 @@ const ChatCard = ({
   const nav = useRouter();
   const handleChatUser = () => {
     setChatUser({ username: cName, uid: cUid, avatar });
-    clearGroup()
+    clearGroup();
     nav.push(`/?chat=${cName}`);
   };
 
@@ -37,10 +37,7 @@ const ChatCard = ({
         <Image
           height={100}
           width={100}
-          src={
-            avatar ||
-            avatars[0]
-          }
+          src={avatar || avatars[0]}
           alt="profile-avatar"
           className="res-img"
         />

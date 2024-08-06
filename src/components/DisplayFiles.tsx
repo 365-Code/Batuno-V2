@@ -17,7 +17,7 @@ const DisplayFiles = ({
   file: fileType;
   msgTime: any;
   setZoom: any;
-  mid?: string
+  mid?: string;
 }) => {
   const today = {
     time: new Date().toLocaleTimeString(undefined, {
@@ -52,7 +52,6 @@ const DisplayFiles = ({
         <div className="relative">
           <object
             onClick={() => setZoom(index, file)}
-            // key={i}
             className={`cursor-zoom-in max-w-full w-[400px] max-h-[400px] object-contain`}
             type={file.type}
             data={file.url}

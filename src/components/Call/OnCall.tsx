@@ -3,7 +3,7 @@ import { useAuth } from "@/context/AuthState";
 import { requestType, UserType } from "@/utils";
 import { db } from "@/utils/firebase";
 import { doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
-import React, { use, useEffect } from "react";
+import React, { useEffect } from "react";
 
 const OnCall = ({ id, name }: { id: string; name: string }) => {
   const { currentUser, setCurrentUser } = useAuth();
@@ -14,7 +14,6 @@ const OnCall = ({ id, name }: { id: string; name: string }) => {
     const chatRef = doc(db, "chats", combineId);
     const userRef = doc(db, "users", currentUser.uid);
     const chatUserRef = doc(db, "users", id);
-    // const userRef = collection(db, "users", currentUser.uid);
     try {
       const userRes = await getDoc(userRef);
       if (userRes.exists()) {
@@ -64,7 +63,6 @@ const OnCall = ({ id, name }: { id: string; name: string }) => {
     const chatRef = doc(db, "chats", combineId);
     const userRef = doc(db, "users", currentUser.uid);
     const chatUserRef = doc(db, "users", id);
-    // const userRef = collection(db, "users", currentUser.uid);
     try {
       const result = await getDoc(chatUserRef);
       if (!result.exists()) throw new Error("user not found");

@@ -1,5 +1,4 @@
 "use client";
-import { avatars } from "@/utils";
 import { auth, db, storage } from "@/utils/firebase";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
@@ -47,7 +46,6 @@ const Page = () => {
         username: user.username,
         email: result.user.email,
         avatar: avatar,
-        // favourites: [],
       });
 
       nav.push("/auth/login");

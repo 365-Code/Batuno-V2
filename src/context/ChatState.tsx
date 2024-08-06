@@ -4,7 +4,6 @@ import { chatUserType, groupType } from "@/utils";
 
 export type ChatUserContextType = {
   chatUser: chatUserType;
-  // chatDetails: detailType,
   chatDetails: string;
   setChatUser: any;
   clearChatUser: any;

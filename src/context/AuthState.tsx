@@ -1,5 +1,5 @@
 "use client";
-import { UserType, chatUserType } from "@/utils";
+import { UserType } from "@/utils";
 import { auth, db } from "@/utils/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";

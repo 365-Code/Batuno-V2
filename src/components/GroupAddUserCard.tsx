@@ -1,47 +1,42 @@
 "use client";
-import { useChatUser } from "@/context/ChatState";
-import { chatUserType } from "@/utils";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 const GroupAddUserCard = ({
   cName,
   avatar,
   cUid,
-  inactive,
   setNewMember,
-  newMembers
+  newMembers,
 }: {
   cName?: string;
   avatar?: string;
   inactive?: boolean;
   cUid: string;
   setNewMember: any;
-  newMembers: Array<string>
+  newMembers: Array<string>;
 }) => {
-
   const [selected, setSelected] = useState(false);
 
   const handleSelect = (select: boolean) => {
-    setSelected(select)
-    
-    if(select){
-      setNewMember((preVal: Array<string>) => ([...preVal, cUid] ) )
-    } else{
-      setNewMember((preVal: Array<string>) => (preVal.filter((c) => c != cUid ) ) )
+    setSelected(select);
+
+    if (select) {
+      setNewMember((preVal: Array<string>) => [...preVal, cUid]);
+    } else {
+      setNewMember((preVal: Array<string>) => preVal.filter((c) => c != cUid));
     }
-  }
+  };
 
   useEffect(() => {
-    newMembers.length == 0 && setSelected(false)
-  }, [newMembers])
+    newMembers.length == 0 && setSelected(false);
+  }, [newMembers]);
 
   return (
     <div
-    onClick={() =>handleSelect(!selected)}
+      onClick={() => handleSelect(!selected)}
       className={`flex min-w-fit px-4 py-2 whitespace-nowrap items-center justify-start gap-4 cursor-pointer ${
-        (selected)
+        selected
           ? "bg-green-400 text-white"
           : " hover:text-green-400 backdrop-blur-sm bg-white/10"
       }`}

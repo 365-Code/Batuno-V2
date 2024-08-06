@@ -15,7 +15,6 @@ import { useAuth } from "@/context/AuthState";
 import { useChatUser } from "@/context/ChatState";
 import GroupCard from "./GroupCard";
 import CardSkeleton from "./CardSkeleton";
-import IncomingCall from "./Call/IncomingCall";
 
 const ChatsSection = () => {
   const [allChats, setAllChats] = useState([] as Array<chatUserType>);

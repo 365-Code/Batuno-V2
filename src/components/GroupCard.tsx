@@ -1,10 +1,8 @@
 "use client";
 import { useChatUser } from "@/context/ChatState";
-import { db } from "@/utils/firebase";
-import { doc, getDoc } from "firebase/firestore";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import React, { useEffect } from "react";
+import React from "react";
 
 const GroupCard = ({
   gName,

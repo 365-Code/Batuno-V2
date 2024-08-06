@@ -3,7 +3,6 @@ import { requestType, UserType } from "@/utils";
 import { db } from "@/utils/firebase";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import React from "react";
-import Test from "./IncomingCall";
 
 type CallNotifyProps = {
   chatId: string;
@@ -20,7 +19,7 @@ const CallNotify = ({
   roomId,
   callerName,
 }: CallNotifyProps) => {
-  const { currentUser, setCurrentUser } = useAuth();
+  const { setCurrentUser } = useAuth();
 
   async function hangup() {
     const chatRef = doc(db, "chats", chatId);

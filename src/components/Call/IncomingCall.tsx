@@ -9,16 +9,12 @@ const IncomingCall = () => {
   if (typeof window === undefined) return;
 
   return (
-    // <div className="bg-white w-[200px] h-[250px] absolute top-6 right-6 z-50">
-    //   {
     <div className="absolute slide-left bottom-4 right-4">
       <P2PCall
         appId={process.env.NEXT_PUBLIC_AGORA_APP_ID! || ""}
         channelName={currentUser.call.roomId || "agora-room"}
       />
     </div>
-    //   }
-    // </div>
   );
 };
 

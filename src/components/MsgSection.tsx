@@ -1,10 +1,5 @@
 "use client";
-import React, {
-  ChangeEvent,
-  HtmlHTMLAttributes,
-  useEffect,
-  useState,
-} from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import Msg from "./Msg";
 import { fileType, messageType, messagesType } from "@/utils";
 import { useAuth } from "@/context/AuthState";
@@ -118,7 +113,6 @@ const MsgSection = () => {
         await updateDoc(chatRef, {
           messages: arrayUnion({
             sender: currentUser.uid,
-            // avatar: currentUser.avatar,
             files: sendFiles,
             text: msg,
             msgTime: Timestamp.now(),
@@ -145,7 +139,6 @@ const MsgSection = () => {
       },
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          // console.log(downloadURL);
           setSendFiles((preVal) => [
             ...preVal,
             { name: file.name, type: file.type, url: downloadURL },
@@ -389,10 +382,6 @@ const MsgSection = () => {
                   <i className="fi fi-sr-clip hover:text-green-500 cursor-pointer text-xl" />
                 </label>
                 <input
-                  // onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                  //   setSendFiles(e.target.files ? e.target.files : "")
-                  // }
-                  // onChange={(e: ChangeEvent<HTMLInputElement>) => e.target.files && uploadFile(e.target.files[0])}
                   onChange={handleUploadFile}
                   value={""}
                   multiple
@@ -428,13 +417,6 @@ const MsgSection = () => {
             </button>
           </div>
         </div>
-
-        {
-          // all call requests
-          currentUser.onCall && !currentUser.call && (
-            <OnCall id={chatUser.uid} name={chatUser.username} />
-          )
-        }
       </section>
       <Modal
         showModal={selectZoom.id == -1 ? false : true}

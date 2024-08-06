@@ -11,7 +11,6 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import React from "react";
-import Test from "./IncomingCall";
 
 type MakeCallProps = {
   requestTo: string;

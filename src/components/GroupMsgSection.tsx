@@ -1,7 +1,6 @@
 "use client";
 import React, {
   ChangeEvent,
-  HtmlHTMLAttributes,
   useEffect,
   useState,
 } from "react";
@@ -30,7 +29,7 @@ import { useRouter } from "next/navigation";
 const MsgSection = () => {
   const { currentUser } = useAuth();
   const { group, clearGroup, groupDetails, setGroupDetails } = useChatUser();
-  const nav = useRouter()
+  const nav = useRouter();
 
   const [msgs, setMsgs] = useState<messagesType>({
     id: "",
@@ -125,7 +124,6 @@ const MsgSection = () => {
       },
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          // console.log(downloadURL);
           setSendFiles((preVal) => [
             ...preVal,
             { name: file.name, type: file.type, url: downloadURL },
@@ -213,7 +211,7 @@ const MsgSection = () => {
     <>
       <section
         className={`${
-            groupDetails
+          groupDetails
             ? "w-0 overflow-hidden p-0 dark:border-0"
             : "flex-1 dark:border-r"
         } min-[1100px]:p-4 min-[1100px]:flex-1 relative flex flex-col justify-between max-w-[900px] backdrop-blur-sm bg-[#f4f6f3] dark:bg-[#080b11] sm:dark:border-r dark:border-white/10`}
@@ -238,7 +236,10 @@ const MsgSection = () => {
           </h3>
 
           <i
-            onClick={() => {nav.push('/'); clearGroup()}}
+            onClick={() => {
+              nav.push("/");
+              clearGroup();
+            }}
             className="sm:hidden fi fi-sr-cross-small ml-auto cursor-pointer"
           />
         </div>
@@ -357,10 +358,6 @@ const MsgSection = () => {
                   <i className="fi fi-sr-clip hover:text-green-500 cursor-pointer text-xl" />
                 </label>
                 <input
-                  // onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                  //   setSendFiles(e.target.files ? e.target.files : "")
-                  // }
-                  // onChange={(e: ChangeEvent<HTMLInputElement>) => e.target.files && uploadFile(e.target.files[0])}
                   onChange={handleUploadFile}
                   value={""}
                   multiple

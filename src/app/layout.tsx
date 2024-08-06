@@ -1,14 +1,11 @@
 import type { Metadata } from "next";
-import { Inter, Karla, Poppins, Raleway } from "next/font/google";
+import { Karla } from "next/font/google";
 import "./globals.css";
 import { Bounce, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { AuthState } from "@/context/AuthState";
 import { ChatUserState } from "@/context/ChatState";
 
-const inter = Inter({ subsets: ["latin"] });
-const poppins = Poppins({ subsets: ["latin"], weight: ["400"] });
-const raleway = Raleway({ subsets: ["latin"], weight: ["500"] });
 const karla = Karla({ subsets: ["latin"], weight: ["500"] });
 
 export const metadata: Metadata = {

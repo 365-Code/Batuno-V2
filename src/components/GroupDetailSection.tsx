@@ -3,10 +3,7 @@ import React, { useEffect, useState } from "react";
 import FileCard from "./FileCard";
 import Image from "next/image";
 import { useChatUser } from "@/context/ChatState";
-import {
-  doc,
-  getDoc
-} from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { db } from "@/utils/firebase";
 import { useAuth } from "@/context/AuthState";
 import { fileType } from "@/utils";
@@ -36,16 +33,22 @@ const GroupDetailsSection = () => {
         });
 
         const { members } = result.data();
-        let mems = [] as Array<{ uid: string, username: string; avatar: string }>;
-        members?.filter((m: string) => m != currentUser.uid)?.forEach(async (mem: string) => {
-          const userRef = doc(db, "users", mem);
-          const result = await getDoc(userRef);
-          if (result.exists()) {
-            const { uid, username, avatar } = result.data();
-            mems = [...mems, { uid, username, avatar }];
-            setGroupMembers(mems);
-          }
-        });
+        let mems = [] as Array<{
+          uid: string;
+          username: string;
+          avatar: string;
+        }>;
+        members
+          ?.filter((m: string) => m != currentUser.uid)
+          ?.forEach(async (mem: string) => {
+            const userRef = doc(db, "users", mem);
+            const result = await getDoc(userRef);
+            if (result.exists()) {
+              const { uid, username, avatar } = result.data();
+              mems = [...mems, { uid, username, avatar }];
+              setGroupMembers(mems);
+            }
+          });
 
         const { messages } = result.data();
         let files = [] as Array<fileType>;
@@ -102,19 +105,19 @@ const GroupDetailsSection = () => {
         </div>
         <div className="flex items-center justify-center gap-4">
           <i
-          onClick={()=>setSelectedDetail("call")}
+            onClick={() => setSelectedDetail("call")}
             className={`fi fi-sr-phone-flip rotate-90 p-4 border rounded-full hover:text-white hover:bg-green-400 hover:border-green-500 cursor-pointer ${
               selectedDetail == "call" && "bg-green-500 border-green-500"
             }`}
           />
           <i
-          onClick={()=>setSelectedDetail("chat")}
+            onClick={() => setSelectedDetail("chat")}
             className={`fi fi-sr-beacon p-4 border rounded-full hover:text-white hover:bg-green-400 hover:border-green-500 cursor-pointer ${
               selectedDetail == "chat" && "bg-green-500 border-green-500"
             }`}
           />
           <i
-          onClick={()=>setSelectedDetail("videoCall")}
+            onClick={() => setSelectedDetail("videoCall")}
             className={`fi fi-sr-video-camera-alt p-4 border rounded-full hover:text-white hover:bg-green-400 hover:border-green-500 cursor-pointer ${
               selectedDetail == "videoCall" && "bg-green-500 border-green-500"
             }`}
@@ -129,23 +132,25 @@ const GroupDetailsSection = () => {
           {groupMembers.length > 0 ? (
             groupMembers.map((mem) => (
               <button
-                  key={mem.uid}
-                  onClick={()=>setChatDetails(mem.uid)}
-                  className={"flex px-4 py-2 items-center justify-start gap-4 cursor-pointer hover:text-green-400"}
-                >
-                  <div className="w-[40px] h-[40px] rounded-full overflow-hidden">
-                    <Image
-                      height={100}
-                      width={100}
-                      src={
-                        mem.avatar ||
-                        "https://img.freepik.com/free-photo/view-3d-confident-businessman_23-2150709932.jpg?t=st=1705210759~exp=1705214359~hmac=fd5a10a8cb94fb6f8c6c19553a52d1d2c2ebc4856ca83543da774e896ed6fb67&w=740"
-                      }
-                      alt="profile-avatar"
-                      className="res-img"
-                    />
-                  </div>
-                  <p>{mem.username || "Batuno"}</p>
+                key={mem.uid}
+                onClick={() => setChatDetails(mem.uid)}
+                className={
+                  "flex px-4 py-2 items-center justify-start gap-4 cursor-pointer hover:text-green-400"
+                }
+              >
+                <div className="w-[40px] h-[40px] rounded-full overflow-hidden">
+                  <Image
+                    height={100}
+                    width={100}
+                    src={
+                      mem.avatar ||
+                      "https://img.freepik.com/free-photo/view-3d-confident-businessman_23-2150709932.jpg?t=st=1705210759~exp=1705214359~hmac=fd5a10a8cb94fb6f8c6c19553a52d1d2c2ebc4856ca83543da774e896ed6fb67&w=740"
+                    }
+                    alt="profile-avatar"
+                    className="res-img"
+                  />
+                </div>
+                <p>{mem.username || "Batuno"}</p>
               </button>
             ))
           ) : (

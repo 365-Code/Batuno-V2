@@ -22,7 +22,6 @@ const GroupChatSection = ({
   setNewGroup: any;
 }) => {
   const [allChats, setAllChats] = useState([] as Array<chatUserType>);
-  const [favChats, setFavChats] = useState([] as Array<chatUserType>);
   const [allGroups, setAllGroups] = useState([] as Array<any>);
   const [searchInput, setSearchInput] = useState("");
   const [searchChats, setSearchChats] = useState([] as Array<any>);
@@ -41,15 +40,15 @@ const GroupChatSection = ({
         let grps = [] as Array<groupType>;
 
         groups.forEach(async (element: string) => {
-          try{
+          try {
             const queryRef = doc(db, "groups", element);
             const query = await getDoc(queryRef);
             if (query.exists()) {
               grps.push({ id: element, ...query.data() } as groupType);
             }
             setAllGroups(grps);
-          } catch(error){
-            return error
+          } catch (error) {
+            return error;
           }
         });
       }
@@ -138,7 +137,6 @@ const GroupChatSection = ({
           ))}
         </div>
       </div>
-
     </section>
   );
 };
