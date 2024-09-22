@@ -14,9 +14,10 @@ import React from "react";
 
 type MakeCallProps = {
   requestTo: string;
+  callMode?: "video" | "audio";
 };
 
-const MakeCall = ({ requestTo }: MakeCallProps) => {
+const MakeCall = ({ requestTo, callMode }: MakeCallProps) => {
   const { currentUser, setCurrentUser } = useAuth();
 
   async function makeCallRequest() {
@@ -71,15 +72,20 @@ const MakeCall = ({ requestTo }: MakeCallProps) => {
       setCurrentUser((prev: UserType) => ({
         ...prev,
         onCall: true,
+        callType: callMode || "audio",
       }));
     }
   }
 
   return (
     <button onClick={makeCallRequest}>
-      <i
-        className={`fi fi-sr-phone-flip rotate-90 p-4 border rounded-full hover:text-white hover:bg-green-400 hover:border-green-500 cursor-pointer`}
-      />
+      {callMode == "video" ? (
+        <i className="fi fi-sr-video-camera-alt p-4 border rounded-full hover:text-white hover:bg-green-400 hover:border-green-500 cursor-pointer" />
+      ) : (
+        <i
+          className={`fi fi-sr-phone-flip rotate-90 p-4 border rounded-full hover:text-white hover:bg-green-400 hover:border-green-500 cursor-pointer`}
+        />
+      )}
     </button>
   );
 };

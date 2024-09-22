@@ -21,6 +21,7 @@ export type UserType = {
   phone?: number;
   favourites: Array<string>;
   onCall: boolean;
+  callMode?: "audio" | "video" | string;
   call: {
     roomId: string;
     requestTo: string;

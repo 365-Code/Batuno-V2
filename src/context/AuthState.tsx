@@ -4,13 +4,20 @@ import { auth, db } from "@/utils/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
-import { createContext, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  Dispatch,
+  SetStateAction,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 export type AuthContextType = {
   currentUser: UserType;
   addFavourite: any;
   removeFavourite: any;
-  setCurrentUser: any;
+  setCurrentUser: Dispatch<SetStateAction<UserType>>;
 };
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -36,6 +43,7 @@ export const AuthState = ({ children }: { children: React.ReactNode }) => {
           logged: false,
           favourites: [],
           onCall: false,
+          callMode: "",
           call: {
             requestFrom: "",
             requestTo: "",
@@ -55,6 +63,7 @@ export const AuthState = ({ children }: { children: React.ReactNode }) => {
     logged: false,
     favourites: [],
     onCall: false,
+    callMode: "",
     call: {
       requestTo: "",
       requestFrom: "",

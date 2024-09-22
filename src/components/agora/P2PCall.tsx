@@ -2,6 +2,7 @@
 import { useAuth } from "@/context/AuthState";
 import { requestType, UserType } from "@/utils";
 import { db } from "@/utils/firebase";
+import avatar from "@/assets/avatar.png";
 import AgoraRTC, {
   AgoraRTCProvider,
   LocalUser,
@@ -60,10 +61,12 @@ function P2PCall(props: { appId: string; channelName: string }) {
     const recvRef = doc(db, "users", recvId);
 
     try {
-      updateDoc(recvRef, {
-        request: null,
-      });
       updateDoc(senderRef, {
+        request: {
+          status: "hangup",
+        },
+      });
+      updateDoc(recvRef, {
         request: {
           status: "hangup",
         },
@@ -101,7 +104,11 @@ function Videos({
   AppID: string;
   hangup: () => void;
 }) {
-  const [cameraOn, setCameraOn] = useState(true);
+  const { currentUser, setCurrentUser } = useAuth();
+
+  const [cameraOn, setCameraOn] = useState(
+    currentUser.callMode == "video" ? true : false
+  );
   const [micOn, setMicOn] = useState(true);
 
   const { AppID, channelName } = props;
@@ -134,8 +141,6 @@ function Videos({
     setCameraOn(false);
     setMicOn(false);
   };
-
-  const { currentUser, setCurrentUser } = useAuth();
 
   const unsub = async () => {
     const chatRef = doc(db, "users", currentUser.uid);
@@ -180,9 +185,7 @@ function Videos({
     );
 
   return (
-    <div
-      className={`w-full h-full relative`}
-    >
+    <div className={`w-full h-full relative`}>
       <div className="w-[100px] h-[100px] absolute top-4 right-4 z-50 rounded-xl">
         {/* <LocalVideoTrack
           track={localCameraTrack}
@@ -195,16 +198,12 @@ function Videos({
           cameraOn={cameraOn}
           micOn={micOn}
           className="w-full h-full"
-          cover="https://www.agora.io/en/wp-content/uploads/2022/10/3d-spatial-audio-icon.svg"
+          cover={"/avatar.png"}
         />
       </div>
 
       {remoteUsers.map((user) => (
-        <RemoteUser
-          cover="https://www.agora.io/en/wp-content/uploads/2022/10/3d-spatial-audio-icon.svg"
-          key={user.uid}
-          user={user}
-        />
+        <RemoteUser cover="/avatar.png" key={user.uid} user={user} />
       ))}
 
       {/* <div className="absolute z-10 bottom-0 left-0 right-0"> */}
@@ -217,8 +216,8 @@ function Videos({
           </a> */}
         <div className="flex items-center p-4 bg-[#151b28]/30 gap-x-2 justify-center w-full h-full">
           <button
-            className={`w-[40px] h-[40px] text-lg p-2 rounded-full ${
-              cameraOn ? "text-white" : "text-gray-500"
+            className={`w-[40px] h-[40px] text-lg p-2 border border-white rounded-full ${
+              cameraOn ? "bg-white text-slate-950" : "bg-transparent"
             }`}
             onClick={() => setCameraOn((a) => !a)}
           >
@@ -233,8 +232,8 @@ function Videos({
             <i className="fi fi-sr-phone-call text-xl" />
           </button>
           <button
-            className={`w-[40px] h-[40px] text-lg rounded-full ${
-              micOn ? "text-white" : "text-gray-500"
+            className={`w-[40px] h-[40px] text-lg p-2 border border-white rounded-full ${
+              micOn ? "bg-white text-slate-950" : "bg-transparent"
             }`}
             onClick={() => setMicOn((a) => !a)}
           >

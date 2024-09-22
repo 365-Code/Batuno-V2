@@ -1,8 +1,8 @@
 import { useAuth } from "@/context/AuthState";
 import { requestType, UserType } from "@/utils";
 import { db } from "@/utils/firebase";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
-import React from "react";
+import { arrayUnion, doc, getDoc, Timestamp, updateDoc } from "firebase/firestore";
+import React, { useEffect, useRef, useState } from "react";
 
 type CallNotifyProps = {
   chatId: string;
@@ -20,6 +20,14 @@ const CallNotify = ({
   callerName,
 }: CallNotifyProps) => {
   const { setCurrentUser } = useAuth();
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  function playSound(url: string) {
+    // const audio = new Audio(url);
+    audioRef.current = new Audio(url);
+    audioRef.current.volume = 0.3;
+    audioRef.current.play();
+  }
 
   async function hangup() {
     const chatRef = doc(db, "chats", chatId);
@@ -27,10 +35,11 @@ const CallNotify = ({
     const recvRef = doc(db, "users", recvId);
     try {
       await updateDoc(chatRef, {
-        logs: {
+        logs: arrayUnion({
           from: senderId,
           status: "rejected",
-        },
+          callTime: Timestamp.now()
+        }),
       });
       const recvRes = await getDoc(recvRef);
       if (recvRes.exists()) {
@@ -53,6 +62,8 @@ const CallNotify = ({
       }
     } catch (error) {
       console.error(error);
+    } finally {
+      playSound("message.mp3");
     }
   }
 
@@ -62,10 +73,11 @@ const CallNotify = ({
     const recvRef = doc(db, "users", recvId);
     try {
       await updateDoc(chatRef, {
-        logs: {
+        logs: arrayUnion({
           from: senderId,
           status: "accepted",
-        },
+          callTime: Timestamp.now()
+        }),
       });
       const recvRes = await getDoc(recvRef);
       if (recvRes.exists()) {
@@ -100,6 +112,20 @@ const CallNotify = ({
       }));
     }
   }
+
+  const [repeat, setRepeat] = useState(1);
+
+  useEffect(() => {
+    if (repeat <= 4) {
+      playSound("tune.mp3");
+      setTimeout(() => {
+        setRepeat(repeat + 1);
+      }, 7000);
+    } else if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current = null;
+    }
+  }, [repeat]);
 
   return (
     <div className="p-4 absolute bottom-4 right-4 bg-[#151b28] shadow shadow-white/30 max-w-full w-fit rounded-lg text-left slide-left">

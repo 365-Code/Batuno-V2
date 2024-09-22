@@ -8,7 +8,7 @@ const FileCard = ({ file }: { file: fileType }) => {
     <Link href={file.url} target="_blank">
       <div className="hover:bg-green-400 px-4 flex py-2 items-center justify-between gap-4 cursor-pointer">
         <div className="flex items-center gap-4">
-          {file.type.includes("text") ? (
+          {!file.type.includes("image") ? (
             <div className="w-[48px] h-[48px] text-2xl flex flex-col items-center justify-center">
               <FileSkeleton fileType={file.type} />
             </div>

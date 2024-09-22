@@ -180,14 +180,15 @@ const ChatsSection = () => {
           : !allChats.length && <p className="py-2 px-4">No Contacts Yet</p>}
 
         <div className="max-h-[240px] overflow-y-scroll custom-scrollbar">
-          {allChats?.map((u, i) => (
-            <ChatCard
-              key={u.uid}
-              cName={u.username}
-              cUid={u.uid}
-              avatar={u.avatar}
-            />
-          ))}
+          {allChats.length > 0 &&
+            allChats?.map((u) => (
+              <ChatCard
+                key={u.uid}
+                cName={u.username}
+                cUid={u.uid}
+                avatar={u.avatar}
+              />
+            ))}
         </div>
       </div>
 

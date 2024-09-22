@@ -19,8 +19,9 @@ const DynamicIncomingCall = dynamic(
 );
 
 const Home = () => {
-  const { chatUser, group, chatDetails } = useChatUser();
+  const { chatUser, group, chatDetails, groupDetails } = useChatUser();
   const { currentUser } = useAuth();
+
   return (
     <main className="h-screen flex items-center justify-center md:p-4">
       <div className="max-w-full w-full h-full flex md:justify-center relative">
@@ -33,7 +34,13 @@ const Home = () => {
         ) : (
           <WelcomeSection />
         )}
-        {chatDetails ? <DetailsSection /> : <GroupDetailsSection />}
+        {chatDetails ? (
+          <DetailsSection />
+        ) : groupDetails ? (
+          <GroupDetailsSection />
+        ) : (
+          ""
+        )}
         <CallRequests />
         <DynamicIncomingCall />
 

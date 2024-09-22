@@ -118,33 +118,23 @@ const DetailsSection = () => {
             <Image
               height={100}
               width={100}
-              src={
-                details.avatar ||
-                "https://img.freepik.com/free-photo/young-woman-with-round-glasses-yellow-sweater_273609-7091.jpg?size=626&ext=jpg&ga=GA1.1.2058463804.1704785941&semt=ais"
-              }
+              src={details.avatar || "/avatar.png"}
               alt="user-avatar"
               className="res-img"
             />
           </div>
-          <h3 className="text-lg">{details.username || "Kierra McAdams"}</h3>
+          <h3 className="text-lg">{details.username || "Batuno"}</h3>
           <p className="text-sm font-semibold text-green-400">
-            {details.email || "Co-founder @ Coffee Country"}
+            {details.email || "example@example.com"}
           </p>
         </div>
         <div className="flex items-center justify-center gap-4">
-          <MakeCall requestTo={chatUser.uid} />
+          <MakeCall requestTo={chatUser.uid} callMode="audio" />
           <i
-            onClick={() => setSelectedDetail("chat")}
-            className={`fi fi-sr-beacon p-4 border rounded-full hover:text-white hover:bg-green-400 hover:border-green-500 cursor-pointer ${
-              selectedDetail == "chat" && "bg-green-500 border-green-500"
-            }`}
+            className="fi fi-sr-beacon p-4 border rounded-full hover:text-white hover:bg-green-400 hover:border-green-500 cursor-pointer
+            bg-green-500 border-green-500"
           />
-          <i
-            onClick={() => setSelectedDetail("videoCall")}
-            className={`fi fi-sr-video-camera-alt p-4 border rounded-full hover:text-white hover:bg-green-400 hover:border-green-500 cursor-pointer ${
-              selectedDetail == "videoCall" && "bg-green-500 border-green-500"
-            }`}
-          />
+          <MakeCall requestTo={chatUser.uid} callMode="video" />
         </div>
       </div>
       <hr className="invisible" />

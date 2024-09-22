@@ -21,7 +21,6 @@ import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import FileSkeleton from "./FileSkeleton";
 import DisplayFiles from "./DisplayFiles";
 import { useRouter } from "next/navigation";
-import OnCall from "./Call/OnCall";
 
 const MsgSection = () => {
   const { currentUser } = useAuth();
@@ -161,12 +160,17 @@ const MsgSection = () => {
     }
   };
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const value = e.target.value;
     setMsg(value);
   };
 
   const handleMsg = () => {
+    if (!showFiles?.length && !msg) {
+      return;
+    }
     showFiles?.forEach((file) => {
       uploadFile(file);
     });
@@ -205,17 +209,6 @@ const MsgSection = () => {
     chatUser.uid && fetchMessages();
   }, [chatUser]);
 
-  const customStyles = {
-    content: {
-      top: "50%",
-      left: "50%",
-      right: "auto",
-      bottom: "auto",
-      marginRight: "-50%",
-      transform: "translate(-50%, -50%)",
-    },
-  };
-
   const unsub = async () => {
     try {
       onSnapshot(doc(db, "chats", msgs.id), (doc) => {
@@ -242,6 +235,7 @@ const MsgSection = () => {
             : "flex-1 dark:border-r"
         } min-[1100px]:p-4 min-[1100px]:flex-1 relative flex flex-col justify-between max-w-[900px] backdrop-blur-sm bg-[#f4f6f3] dark:bg-[#080b11] sm:dark:border-r dark:border-white/10`}
       >
+        {/* Section Header */}
         <div
           id="heading"
           className="w-full h-[65px] z-[2] flex items-center gap-4 top-0 left-0 absolute bg-black/20 dark:bg-[#0d121b]  backdrop-blur-sm px-4 dark:border-b dark:border-white/10"
@@ -268,7 +262,7 @@ const MsgSection = () => {
             className="sm:hidden fi fi-sr-cross-small ml-auto cursor-pointer"
           />
         </div>
-
+        {/* Section Messages */}
         <div
           onClick={hideEmoji}
           id="chat-messages"
@@ -348,7 +342,7 @@ const MsgSection = () => {
             </div>
           ))}
         </div>
-
+        {/* Section Message Input */}
         <div
           id="send"
           className="h-[50px] flex gap-1 md:gap-4 items-center justify-between max-w-full"
@@ -366,17 +360,18 @@ const MsgSection = () => {
             />
           </div>
           <div className="max-h-full flex items-center gap-2 w-full h-[50px]">
-            <div className="max-h-full relative bg-white dark:bg-[#0d121b] focus-within:ring-green-500 focus-within:ring-1 rounded-md flex-1 flex items-center px-4 gap-4">
-              <input
-                name="msg"
-                onFocus={hideEmoji}
-                value={msg}
-                onChange={handleChange}
-                type="text"
-                autoComplete="off"
-                className="w-full py-3 sm:py-4 outline-none bg-transparent"
-                placeholder="Write a reply"
-              />
+            <div className="max-h-full relative bg-white dark:bg-[#0d121b] focus-within:ring-green-500 focus-within:ring-1 rounded-md flex-1 flex items-center px-4 gap-4 overflow-hidden">
+              <div className="h-full w-full flex items-center overflow-hidden">
+                <input
+                  name="msg"
+                  onFocus={hideEmoji}
+                  value={msg}
+                  onChange={handleChange}
+                  type="text"
+                  className="w-full py-2 sm:py-4 outline-none max-h-full bg-transparent resize-none no-scrollbar"
+                  placeholder="write a reply"
+                />
+              </div>
               <div className="flex gap-4 items-center">
                 <label htmlFor="sendFiles">
                   <i className="fi fi-sr-clip hover:text-green-500 cursor-pointer text-xl" />

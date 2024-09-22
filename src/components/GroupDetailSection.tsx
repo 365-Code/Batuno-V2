@@ -86,7 +86,7 @@ const GroupDetailsSection = () => {
 
       <div id="otherprofile" className="px-4 space-y-4 text-center">
         <div>
-          <div className="w-[108px] h-[108px] mx-auto rounded-full overflow-hidden text-center">
+          <div className="w-[100px] h-[100px] mb-2 mx-auto rounded-full overflow-hidden text-center">
             <Image
               height={100}
               width={100}
@@ -100,7 +100,7 @@ const GroupDetailsSection = () => {
           </div>
           <h3 className="text-lg">{details.username || "Kierra McAdams"}</h3>
           <p className="text-sm font-semibold text-green-400">
-            {"Co-founder @ Coffee Country"}
+            {"Group Description"}
           </p>
         </div>
         <div className="flex items-center justify-center gap-4">
@@ -158,7 +158,7 @@ const GroupDetailsSection = () => {
           )}
         </div>
       </div>
-      <hr />
+      <hr className="w-[95%] mx-auto" />
 
       <div id="otherfiles">
         <h3 className="text-slate-500 dark:text-white px-4">Shared files</h3>
@@ -171,7 +171,7 @@ const GroupDetailsSection = () => {
         </div>
       </div>
 
-      <hr />
+      <hr className="w-[95%]" />
       <div id="options" className="space-y-2">
         <button
           onClick={handleDeleteContact}
@@ -179,7 +179,7 @@ const GroupDetailsSection = () => {
         >
           Delete this Contact
         </button>
-        <hr />
+        <hr className="w-[95%] mx-auto" />
         <button className="px-4 py-4 text-red-400">Block this Contact</button>
       </div>
     </section>

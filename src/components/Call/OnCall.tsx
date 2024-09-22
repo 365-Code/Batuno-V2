@@ -2,7 +2,14 @@
 import { useAuth } from "@/context/AuthState";
 import { requestType, UserType } from "@/utils";
 import { db } from "@/utils/firebase";
-import { doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
+import {
+  arrayUnion,
+  doc,
+  getDoc,
+  onSnapshot,
+  Timestamp,
+  updateDoc,
+} from "firebase/firestore";
 import React, { useEffect } from "react";
 
 const OnCall = ({ id, name }: { id: string; name: string }) => {
@@ -34,11 +41,13 @@ const OnCall = ({ id, name }: { id: string; name: string }) => {
           await updateDoc(userRef, {
             request: null,
           });
+
           await updateDoc(chatRef, {
-            logs: {
+            logs: arrayUnion({
               from: currentUser.uid,
               status: "missed",
-            },
+              callTime: Timestamp.now(),
+            }),
           });
         }
       }
@@ -56,6 +65,12 @@ const OnCall = ({ id, name }: { id: string; name: string }) => {
 
     return () => clearTimeout(debounce);
   }, []);
+
+  function playSound(url: string) {
+    const audio = new Audio(url);
+    audio.volume = 0.3;
+    audio.play();
+  }
 
   async function handlehangup() {
     const combineId =
@@ -86,6 +101,7 @@ const OnCall = ({ id, name }: { id: string; name: string }) => {
     } catch (error) {
       console.error(error);
     } finally {
+      playSound("message.mp3");
       setCurrentUser((prev: UserType) => ({ ...prev, onCall: false }));
     }
   }
@@ -108,6 +124,7 @@ const OnCall = ({ id, name }: { id: string; name: string }) => {
               },
             }));
           } else if (request.status == "rejected") {
+            playSound("message.mp3");
             setCurrentUser((prev: UserType) => ({
               ...prev,
               onCall: false,
